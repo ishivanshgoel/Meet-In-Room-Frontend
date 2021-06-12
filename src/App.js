@@ -1,5 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
+import { useEffect } from 'react'
 
 // components
 import Call from './Components/Call/Call'
@@ -10,6 +11,10 @@ import Teams from './Components/Teams/Teams'
 import { Icon } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
+//services
+import online from './Services/Socket/Status/online'
+import reciever from './Services/Socket/Call/reciever';
+
 // routes
 const routes = [
   { path: 'call', component: Call, name: 'call' },
@@ -18,6 +23,16 @@ const routes = [
 ]
 
 function App() {
+
+  useEffect(()=>{
+    // pass the user id
+    let id = prompt()
+    online(id)
+    
+     // listeing to incoming calls
+    reciever()
+  })  
+
   return (
     <>
       <nav class="navbar navbar-light bg-light">

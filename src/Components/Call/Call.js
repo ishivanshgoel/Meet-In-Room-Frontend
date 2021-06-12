@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import './CSS/call.css'
 //services
-import call from '../../Services/Call/call'
+import call from '../../Services/Socket/Call/call'
 
 const sendid=999
 const users = [

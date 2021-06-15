@@ -4,6 +4,9 @@ import BASEURL from '../../Configuration/baseurl'
 
 const endPoints = {
 
+    login: '/auth/login',
+    register: '/auth/register'
+
 }
 
 function urlBuilder(endPoint, id = null) {
@@ -25,8 +28,12 @@ async function post(endPoint, data, id = null) {
     }).then((response) => {
         return response
     }).catch((err) => {
-        if(err.response && err.response.data && err.response.error) return err.response.data.error.message
-        return "Error Occured"
+        // to handle errors other than sent from server
+        // error from server are being send in thr form of json
+        console.log(err) 
+        if (err.message) {
+            return err.message
+        } else return 'Something went wrong'
     });
 
 }

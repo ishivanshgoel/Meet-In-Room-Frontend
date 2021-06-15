@@ -1,0 +1,17 @@
+#content{
+    height: 98%;
+}
+#left {
+    float: left;
+    width: 20%;
+    background: red;
+    height: 100%;
+    overflow: scroll;
+}
+#right {
+    float: left;
+    width: 80%;
+    background: blue;
+    height: 100%;
+    overflow: scroll;
+}

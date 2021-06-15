@@ -5,7 +5,9 @@ import BASEURL from '../../Configuration/baseurl'
 const endPoints = {
 
     login: '/auth/login',
-    register: '/auth/register'
+    register: '/auth/register',
+    calloffer: '/call/calloffer'
+
 
 }
 
@@ -30,7 +32,7 @@ async function post(endPoint, data, id = null) {
     }).catch((err) => {
         // to handle errors other than sent from server
         // error from server are being send in thr form of json
-        console.log(err) 
+        console.log(err)
         if (err.message) {
             return err.message
         } else return 'Something went wrong'

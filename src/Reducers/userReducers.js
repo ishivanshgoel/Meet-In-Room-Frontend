@@ -13,17 +13,15 @@ function userReducers(state = initialState, action) {
            
             return {
                 ...state,
-                user: action.token,
-                username: action.username,
-                id: action.id
+                email: action.email,
+                user: action.user
             }
         case REMOVEUSER:
             
             return {
                 ...state,
+                email: false,
                 user: false,
-                username: false,
-                id: false
             }
     default:
        return state;

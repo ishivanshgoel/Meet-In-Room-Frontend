@@ -51,8 +51,8 @@ function _Login() {
             dispatch({
                 type: SETUSER,
                 token: refreshToken,
-                username: email,
-                id: uid
+                email: email,
+                user: uid
             })
         } else{
             // response is error message : string

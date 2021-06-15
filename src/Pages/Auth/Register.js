@@ -42,7 +42,7 @@ function Register() {
             //     type: SETUSER,
             //     token: data.refreshData,
             //     username: email,
-            //     id: data.uid
+            //     user: data.uid
             // })
 
             // if registered successfully

@@ -7,6 +7,7 @@ import socket from "../socket"
 
 function reciever(){
 
+    console.log("Reciever Active")
     socket.on("receive-call-offer", (data)=>{
         console.log("Recieved Call ", data)
         let answer = window.confirm(`Recieving call from ${data.sender}`)
@@ -22,6 +23,9 @@ function reciever(){
 
     socket.on("call-offer-accepted", (data)=>{
         alert("Call offer accepted")
+
+        
+
     })
 
     socket.on("call-offer-rejected", (data)=>{

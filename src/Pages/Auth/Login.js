@@ -4,8 +4,10 @@ import { useHistory } from "react-router-dom"
 import { useDispatch } from 'react-redux'
 import { SETUSER } from '../../Reducers/actionTypes'
 
-// components
+// pages
 import Register from './Register'
+import NotFound from '../Static/NotFound'
+// compoenents
 import Notification from '../../Components/Notification/Notification'
 
 // styling
@@ -85,6 +87,8 @@ function Login() {
             <Switch>
                 <Route exact path="/"><_Login/></Route>
                 <Route exact path="/register"><Register/></Route> 
+                {/* Not found */}
+                <Route component={NotFound}/>
             </Switch>
         </Router>
     )

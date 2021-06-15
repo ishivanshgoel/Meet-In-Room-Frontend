@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import Call from '../Call/Call'
 import Chat from '../Chat/Chat'
 import Teams from '../Teams/Teams'
+import NotFound from '../../Pages/Static/NotFound'
 
 //styling
 import './CSS/content.css'
@@ -38,6 +39,7 @@ function Content() {
                 return (<Route exact path={"/" + route.path} component={route.component} />)
               })
             }
+            <Route component={NotFound} />
           </Switch>
         </div>
       </Router>

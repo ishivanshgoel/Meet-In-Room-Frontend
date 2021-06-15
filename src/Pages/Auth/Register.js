@@ -20,15 +20,38 @@ function Register() {
     const[password, setPassword]=useState(null)
     const[cpassword, setcPassword]=useState(null)
 
-    let handleRegister = (event)=>{
+    let handleRegister = async (event)=>{
         event.preventDefault();
         if(!email || !password || !cpassword){
             Notification('Warning','Please fill all the field to proceed!!', "danger")
             return
         }
 
-        // if registered successfully
-        Notification('Voila!','You are registered Successfully!!', "success")
+        const response = await post('register',{
+            email,
+            password
+        })
+
+        if(response.data){
+
+            // de-structure the object to get data out of it 
+            let { data } = response.data
+
+            // set user in redux store
+            // dispatch({
+            //     type: SETUSER,
+            //     token: data.refreshData,
+            //     username: email,
+            //     id: data.uid
+            // })
+
+            // if registered successfully
+            Notification('Voila!','You are registered Successfully!!', "success")
+
+        } else {
+            // response is error message : string
+            Notification('Error', response, 'danger')
+        }
 
     }
 

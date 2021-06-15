@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 // Pages
@@ -21,21 +21,15 @@ function App() {
   // loading screen
   const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
 
-  useEffect(()=>{
-    // pass the user id
-    // let id = prompt()
-    let id = 'shivansh'
-    online(id)
-    
-     // listeing to incoming calls
-    reciever()
-
-    showLoadingScreen()
-
-  })  
-
   // keep track of authenticated user
   const user = useSelector(state => state.user)
+
+  useEffect(()=>{
+  
+    showLoadingScreen()
+  
+  }) 
+  // reciever() 
 
   return (
     <>

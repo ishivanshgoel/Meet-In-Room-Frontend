@@ -1,65 +1,113 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
+
+// components
 import './CSS/call.css'
+import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
+import Notification from '../../Components/Notification/Notification'
+import { Button } from 'semantic-ui-react'
+import CallScreen from '../../Components/CallScreen/CallScreen'
+
 //services
-import call from '../../Services/Socket/Call/call'
+import get from '../../Services/Request/get'
+import post from '../../Services/Request/post'
 
-const sendid=999
-const users = [
-    {name: 'Shivansh', id : '1'},
-    {name: 'Mayanak' , id : '2'},
-    {name: 'Samarth', id : '3'},
-    {name: 'Shivansh', id : '4'},
-    {name: 'Mayanak', id : '5'},
-    {name: 'Samarth', id : '6'},
-    {name: 'Shivansh', id : '7'},
-    {name: 'Mayanak', id : '8'},
-    {name: 'Samarth', id : '9'},
-    {name: 'Shivansh', id : '10'},
-    {name: 'Mayanak', id : '11'},
-    {name: 'Samarth', id : '12'},
-    {name: 'Shivansh', id : '13'},
-    {name: 'Mayanak', id : '14'},
-    {name: 'Samarth', id : '15'},
-    {name: 'Shivansh', id : '16'},
-    {name: 'Mayanak', id : '17'},
-    {name: 'Samarth', id : '18'},
-    {name: 'Shivansh', id : '19'},
-    {name: 'Mayanak', id : '20'},
-    {name: 'Samarth', id : '21'},
-    {name: 'Shivansh', id : '22'},
-    {name: 'Mayanak', id : '23'},
-    {name: 'Samarth', id : '24'},
-    {name: 'Shivansh', id : '25'},
-    {name: 'Mayanak', id : '26'},
-    {name: 'Samarth', id : '27'},
-]
 
-// make call offer
-const makeCall = (event)=>{
-    let id = event.target.name
-    call(id,sendid)
-}
 
 function Call() {
-    
-    return (
-        <div id="content">
-            <Router>
-            <div id="left">
-                {
-                    users.map((user)=>{
-                        return( 
-                            <button onClick={makeCall} name={user.id}>Call { user.name }</button>
-                        )
-                    })
-                }
-            </div>
-            <div id="right">
 
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
+    const [users, setUsers] = useState({
+        fetched: false,
+        contactList: []
+    })
+    const [callScreen, showCallScreen, hideCallScreen] = CallScreen()
+
+    
+    const user = useSelector(state => state.user)
+
+    // make call offer
+    const makeCall = async (event) => {
+        let rid = event.target.name
+        const response = await post('calloffer',{
+            sender: user,
+            receiver: rid
+        })
+
+        if(response.data){
+            // show call screen
+            // showCallScreen(true)
+        } else{
+            Notification('Warning', 'Could not place this call', 'warning')
+        }
+
+    }
+
+
+    useEffect(async () => {
+
+        // start the loading screen
+        showLoadingScreen()
+        const response = await get('contactlist')
+
+        if (response.data) {
+
+            // set the contact list
+            setUsers({
+                ...users,
+                fetched: true,
+                contactList: response.data
+            })
+        } else {
+            Notification('Error', 'Cannot fetch your contact list', 'danger')
+        }
+
+        // time to hide loading screen
+        hideLoadingScreen()
+    }, [])
+
+
+    /**
+     * display loading screen until all the users list is fetched
+     */
+    return (
+        users.fetched ? (
+            <div id="content">
+                {callScreen}
+                <Router>
+                    <div id="content-left">
+                        <div id="content-left-tag">
+                            Contact List
+                        </div>
+                        {
+                            users.contactList.map((user) => {
+                                return (
+                                    <Button icon="phone square" content={user.email} onClick={makeCall} 
+                                                style={{
+                                                    marginTop: "10px", 
+                                                    width: "100%",
+                                                    height: "40px",
+                                                    fontSize: "20px",
+                                                    padding: "5px" 
+                                                }} 
+                                            name={user.id}
+                                    />
+                                )
+                            })
+                        }
+                    </div>
+
+                    <div id="content-right">
+
+                    </div>
+                </Router>
             </div>
-            </Router>
-        </div>
+        ) : (
+            <div>
+                {loadingScreen}
+            </div>
+        )
     )
 }
 

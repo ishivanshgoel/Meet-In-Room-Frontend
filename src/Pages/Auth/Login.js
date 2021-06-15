@@ -30,7 +30,7 @@ function _Login() {
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
 
-    let handleFormSubmit = (event)=>{
+    let handleFormSubmit = async (event)=>{
         // login request
         event.preventDefault()
 
@@ -39,13 +39,26 @@ function _Login() {
             return
         }
 
-        // set user in store
-        dispatch({
-            type: SETUSER,
-            token: password,
-            username: email,
-            id: 23
+        const response = await post('login',{
+            email,
+            password
         })
+
+        if(response.data){
+            let { data } = response
+            let { uid, refreshToken } = data
+            // set user in redux store
+            dispatch({
+                type: SETUSER,
+                token: refreshToken,
+                username: email,
+                id: uid
+            })
+        } else{
+            // response is error message : string
+            Notification('Error',response, 'danger')
+        }
+
     }
 
     return (

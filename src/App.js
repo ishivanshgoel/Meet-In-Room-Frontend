@@ -1,11 +1,9 @@
-import './App.css';
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 // Pages
 import Login from './Pages/Auth/Login'
 import Content from './Pages/Content/Content'
-
 
 //styling components
 import 'semantic-ui-css/semantic.min.css'
@@ -13,9 +11,8 @@ import LoadingScreen from './Components/LoadingScreen/LoadingScreenHook'
 import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 
-//services
-import online from './Services/Socket/Status/online'
-import reciever from './Services/Socket/Call/reciever'
+import {getItem} from './Helpers/LocalStorage/LocalStorage'
+import {SETUSER} from './Reducers/actionTypes'
 
 function App() {
   // loading screen
@@ -24,9 +21,23 @@ function App() {
   // keep track of authenticated user
   const user = useSelector(state => state.user)
 
+  const dispatch = useDispatch()
+
   useEffect(()=>{
-  
-    showLoadingScreen()
+
+    let refreshToken = getItem('usertoken')
+    let email = getItem('email')
+    let uid = getItem('uid')
+
+    // verify this first
+    if(refreshToken && email && uid){
+        dispatch({
+          type: SETUSER,
+          token: refreshToken,
+          email: email,
+          user: uid
+      })
+    }
   
   }) 
   // reciever() 

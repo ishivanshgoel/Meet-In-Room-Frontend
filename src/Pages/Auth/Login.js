@@ -16,9 +16,16 @@ import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 import { Button, Form, Card } from 'react-bootstrap'
 
 // services
-import get from '../../Services/Request/get'
-import post from '../../Services/Request/post'
+import get from '../../Helpers/Request/get'
+import post from '../../Helpers/Request/post'
+import {setItem} from '../../Helpers/LocalStorage/LocalStorage'
 
+/**
+ * @param _Login login form
+ * @param loadingScreen loading scrren hook variable
+ * @param email email entered by user in input field
+ * @param password password entered by user in input field
+ */
 
 function _Login() {
     let history = useHistory()
@@ -59,6 +66,9 @@ function _Login() {
                 email: email,
                 user: uid
             })
+            setItem('usertoken',refreshToken)
+            setItem('email', email)
+            setItem('uid', uid)
         } else {
             // response is error message : string
             Notification('Error', response, 'danger')

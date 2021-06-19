@@ -2,42 +2,39 @@ import axios from 'axios'
 
 import BASEURL from '../../Configuration/baseurl'
 
+// endpoints in server api
+// just make changes here if any of the endpoint url changes on server side
 const endPoints = {
-
-    login: '/auth/login',
-    register: '/auth/register',
-    calloffer: '/call/calloffer'
-
-
+    contactlist: '/call/contactlist',
 }
 
-function urlBuilder(endPoint, id = null) {
-    if (id != null) {
-        return BASEURL + endPoints[endPoint] + "/" + id
-    }
-    else return BASEURL + endPoints[endPoint]
+
+var urlBuilder = (endPoint, id = null) => {
+
+    return id ?
+        BASEURL + endPoints[endPoint] + "/" + id
+        : BASEURL + endPoints[endPoint]
+
 }
 
 // by default id is null, passin as the second argument if the field is required
-async function post(endPoint, data, id = null) {
+async function get(endPoint, id = null) {
 
     // let token = getItem('token') // make a function to retrieve token from local storage
     let token = 'dummy'
 
     //pass the token in headers of request 
-    return axios.post(urlBuilder(endPoint, id), data, {
+    return axios.get(urlBuilder(endPoint, id), {
         headers: { 'Authorization': token ? `Bearer ${token}` : '', 'Content-Type': 'application/json' }
     }).then((response) => {
         return response
     }).catch((err) => {
         // to handle errors other than sent from server
-        // error from server are being send in thr form of json
-        console.log(err)
         if (err.message) {
             return err.message
         } else return 'Something went wrong'
-    });
+    })
 
 }
 
-export default post
+export default get

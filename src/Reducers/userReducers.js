@@ -1,9 +1,8 @@
-import { SETUSER, REMOVEUSER } from './actionTypes' 
+import { SETUSER, REMOVEUSER, CALLACCEPTED, SETPEER, SETSTREAM } from './actionTypes' 
 
 // initial state
 const initialState = {
     user: false,
-    admin: false
 };
 
 // action reducer
@@ -23,6 +22,24 @@ function userReducers(state = initialState, action) {
                 email: false,
                 user: false,
             }
+        case CALLACCEPTED:
+            return {
+                ...state,
+                callaccepted: true
+            }
+        
+        case SETPEER:
+            return {
+                ...state,
+                peerId: action.peerId
+            }
+        
+        case SETSTREAM:
+            return {
+                ... state,
+                stream: action.stream
+            }
+
     default:
        return state;
     }

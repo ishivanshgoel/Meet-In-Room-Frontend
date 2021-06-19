@@ -7,7 +7,7 @@ import Notification from '../../Components/Notification/Notification'
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
 // services
-import post from '../../Services/Request/post'
+import post from '../../Helpers/Request/post'
 
 function Register() {
     let history = useHistory()

@@ -1,7 +1,123 @@
-.remoteVideo{
-    width: 300px;
+#video-grid{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+ }
+ video{
+    height: 300px;
+    width: 400px;
+    object-fit: cover;
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 0.2rem;
+ }
+
+.meet {
+    height: 100vh;
+    display: flex;
 }
 
-.myVideo{
-    width: 300px;
+.meet-left {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+
+.meet-right {
+    flex: 0.2
+}
+
+.meet-videos {
+    flex-grow: 1;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.meet-right {
+    background-color: #242324;
+    border-left: 1px solid #3D3D42;
+}
+
+.meet-bottom {
+    background-color: black;
+    color: #D2D2D2;
+    display: flex;
+    justify-content: center;
+    min-height: 50px;
+    padding: 30px;
+}
+
+.meet-bottom-block {
+    display: flex;
+    border-radius: 2rem;
+    background-color: #1C1E20;
+}
+
+.meet-bottom-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+.meet-bottom-button:hover {
+    
+}
+
+.meet-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.meet-header {
+    padding-top: 5px;
+    color: #F5F5F5;
+    text-align: center;
+}
+
+.meet-chat-window {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.messages{
+    color: white;
+    list-style: none;
+}
+
+.meet-message-container {
+    padding: 22px 12px;
+    display: flex;
+}
+
+.meet-message-container input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #F5F5F5;
+}
+
+.leave-meeting {
+    color: #EB534B;
+}
+
+.unmute, .stop {
+    color: #CC3B33;
+}
+
+.icon{
+    margin: 10px !important;
+}
+
+.meet-icon{
+    font-size: 1.8em !important;
+}
+
+.custom-phone:hover{
+    color: red;
 }

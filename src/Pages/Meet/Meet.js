@@ -4,36 +4,41 @@ import post from '../../Helpers/Request/post'
 
 // compoents
 import Card from '../../Components/RoomCard/RoomCard'
+import LoadingScreenHook from '../../Components/LoadingScreen/LoadingScreenHook'
 
 function Meet() {
 
-    const user = useSelector((state)=> state.user)
+    const user = useSelector((state) => state.user)
     const [fetched, setFetched] = useState(false)
     const [rooms, setRooms] = useState([])
 
-    useEffect(async()=>{
-        const myRooms = await post('myrooms',{
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreenHook()
+
+    useEffect(async () => {
+        showLoadingScreen()
+        const myRooms = await post('myrooms', {
             myId: user
         })
         setRooms(myRooms.data)
-        console.log(myRooms.data)
         setFetched(true)
-        
-    },[])
+        hideLoadingScreen()
+    }, [])
 
     return (
         <div id="meet-container">
             {
                 fetched ? (
                     rooms && rooms.length > 0 ? (
-                        rooms.map((room)=>
-                            <Card roomId={room}/>
+                        rooms.map((room) =>
+                            <Card roomId={room} />
                         )
                     ) : (
                         <h1> No Rooms Found </h1>
                     )
-                ):(
-                    <h1>Fetching Rooms</h1>
+                ) : (
+                    <>
+                        {loadingScreen}
+                    </>
                 )
             }
         </div>

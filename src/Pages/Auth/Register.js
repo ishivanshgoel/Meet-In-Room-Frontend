@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Button, Form, Card } from 'react-bootstrap'
 import { useHistory } from "react-router-dom"
 
+import './CSS/common.css'
+
 // components
 import Notification from '../../Components/Notification/Notification'
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
@@ -65,35 +67,33 @@ function Register() {
     return (
         <>
             {loadingScreen}
-            <Card style={{ margin: "40px", border: "1px solid black" }}>
-                <Card.Header as="h5">Sign Up</Card.Header>
-                <Card.Body>
-                    <Form style={{ padding: "50px" }} onSubmit={handleRegister}>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" onChange={(event) => setEmail(event.target.value)} />
-                            <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text>
-                        </Form.Group>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-12 commontext">
+                    </div>
+                    <div class="col-md-6 col-12 input-position text-center">
+                        <Form onSubmit={handleRegister} id="commonform">
+                            <h2 style={{ textAlign: "center" }}>Register</h2>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Control type="email" placeholder="Enter email" onChange={(event) => setEmail(event.target.value)} />
+                            </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)} />
-                        </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Control type="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)} />
+                            </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control type="password" placeholder="Confirm Password" onChange={(event) => setcPassword(event.target.value)} />
-                        </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
-                        <Button variant="link" onClick={moveToLogin}>Already Registered? Click Here</Button>
-                        <br></br>
-                    </Form>
-                </Card.Body>
-            </Card>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Control type="password" placeholder="Confirm Password" onChange={(event) => setcPassword(event.target.value)} />
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                                Register
+                            </Button>
+                            <Button variant="link" onClick={moveToLogin}>Already Registered? Click Here</Button>
+                            <br></br>
+                        </Form>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

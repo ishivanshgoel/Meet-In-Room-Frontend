@@ -14,11 +14,11 @@ import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
 // styling
 import { Button, Form, Card } from 'react-bootstrap'
+import './CSS/common.css'
 
 // services
-import get from '../../Helpers/Request/get'
 import post from '../../Helpers/Request/post'
-import {setItem} from '../../Helpers/LocalStorage/LocalStorage'
+import { setItem } from '../../Helpers/LocalStorage/LocalStorage'
 
 /**
  * @param _Login login form
@@ -66,7 +66,7 @@ function _Login() {
                 email: email,
                 user: uid
             })
-            setItem('usertoken',refreshToken)
+            setItem('usertoken', refreshToken)
             setItem('email', email)
             setItem('uid', uid)
         } else {
@@ -81,35 +81,30 @@ function _Login() {
     return (
         <>
             {loadingScreen}
-            <Card style={{ margin: "40px", border: "1px solid black" }}>
-                <Card.Header as="h5">Sign In</Card.Header>
-                <Card.Body>
-                    <Form style={{ padding: "50px" }} onSubmit={handleFormSubmit}>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Email address</Form.Label>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-12 commontext">
+                    </div>
+                    <div class="col-md-6 col-12 input-position text-center">
+                        <Form onSubmit={handleFormSubmit} id="commonform">
+                            <h2 style={{ textAlign: "center" }}>Login</h2>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Control type="email" placeholder="Enter email"
+                                    onChange={(event) => setEmail(event.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
 
-                            <Form.Control type="email" placeholder="Enter email"
-                                onChange={(event) => setEmail(event.target.value)} />
-
-                            <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text>
-
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password"
-                                onChange={(event) => setPassword(event.target.value)} />
-                        </Form.Group>
-
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
-                        <Button variant="link" onClick={moveToRegister}>New User? Register Here</Button>
-                    </Form>
-                </Card.Body>
-            </Card>
+                                <Form.Control type="password" placeholder="Password"
+                                    onChange={(event) => setPassword(event.target.value)} />
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                                Login
+                            </Button>
+                            <Button variant="link" onClick={moveToRegister}>New User? Register Here</Button>
+                        </Form>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

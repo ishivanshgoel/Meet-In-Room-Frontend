@@ -3,9 +3,6 @@ import { useParams } from "react-router-dom"
 import { useHistory } from 'react-router'
 import { Divider, Grid, Segment, Button } from 'semantic-ui-react'
 
-import socket from '../../Configuration/socket'
-
-
 function JoinRoom() {
 
     const myVideo = useRef()
@@ -51,7 +48,7 @@ function JoinRoom() {
         <Segment>
             <Grid columns={2} relaxed='very'>
                 <Grid.Column>
-                    <video ref={myVideo} autoPlay style={{ width: "300px" }}></video>
+                    <video ref={myVideo} autoPlay style={{ width: "300px" }} muted="muted"></video>
                 </Grid.Column>
                 <Grid.Column>
                     <Button inverted color='green' onClick={handleMeetJoin}>

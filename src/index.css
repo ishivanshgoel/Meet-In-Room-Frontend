@@ -1,4 +1,12 @@
+body{
+    background-color: grey;
+}
 #root{
-    height: 100vh;
-    overflow: hidden;
+    
+}
+
+.nav-app{
+    border-radius: 20rem;
+    height: 40px;
+    margin: 10px;
 }

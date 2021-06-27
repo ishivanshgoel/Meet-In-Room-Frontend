@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
@@ -9,6 +8,10 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import Avatar from 'react-avatar'
+
+// css
+import './CSS/assignedWork.css'
 
 // helpers
 import get from '../../Helpers/Request/get'
@@ -105,7 +108,7 @@ function ResponsiveDrawer(props) {
                 {users && users.map(({id, email}, index) => (
                     <ListItem button key={id} name={id} onClick={()=>handleLoadChat(id, email)}>
                         {/* icon for name */}
-                        <ListItemIcon>{index % 2 === 0 ? null : null}</ListItemIcon> 
+                        <ListItemIcon><Avatar name={email} size="30" textSizeRatio={0.75} round="20px"/></ListItemIcon> 
                         <ListItemText primary={email}/>
                     </ListItem>
                 ))}
@@ -165,13 +168,5 @@ function ResponsiveDrawer(props) {
         </>
     );
 }
-
-ResponsiveDrawer.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    window: PropTypes.func,
-};
 
 export default ResponsiveDrawer;

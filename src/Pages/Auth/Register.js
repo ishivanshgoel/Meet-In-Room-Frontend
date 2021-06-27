@@ -19,6 +19,7 @@ function Register() {
     }
 
     const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
+    const [name, setName] = useState(null)
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
     const [cpassword, setcPassword] = useState(null)
@@ -28,12 +29,13 @@ function Register() {
 
         showLoadingScreen()
 
-        if (!email || !password || !cpassword) {
+        if (!name || !email || !password || !cpassword) {
             Notification('Warning', 'Please fill all the field to proceed!!', "danger")
             return
-        }
+        } 
 
         const response = await post('register', {
+            name,
             email,
             password
         })
@@ -74,6 +76,10 @@ function Register() {
                     <div class="col-md-6 col-12 input-position text-center">
                         <Form onSubmit={handleRegister} id="commonform">
                             <h2 style={{ textAlign: "center" }}>Register</h2>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Control type="text" placeholder="Name" onChange={(event) => setName(event.target.value)} />
+                            </Form.Group>
+
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Control type="email" placeholder="Enter email" onChange={(event) => setEmail(event.target.value)} />
                             </Form.Group>

@@ -7,8 +7,13 @@ const endPoints = {
     login: '/auth/login',
     register: '/auth/register',
     calloffer: '/call/calloffer',
-    myrooms: '/call/myrooms'
-
+    myrooms: '/call/myrooms',
+    createroom:'/call/createroom',
+    addinroom: '/call/addinroom',
+    assignedwork: '/work/assignedwork',
+    mywork: '/work/mywork',
+    updatestatus: '/work/updatestatus',
+    assign: '/work/assign'
 
 }
 

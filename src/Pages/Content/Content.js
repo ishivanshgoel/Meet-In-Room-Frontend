@@ -2,17 +2,18 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import { initPeer } from '../../Configuration/peer'
+import { makeStyles } from '@material-ui/core/styles'
 
 // Pages
-import Chat from '../Chat/Chat'
-import NotFound from '../../Pages/Static/NotFound'
-import Welcome from '../../Pages/Static/Welcome'
-import Meet from '../../Pages/Meet/Meet'
+import AssignedWork from '../AssignedWork/AssignedWork'
+import MyWork from '../MyWork/MyWork'
+import Meet from '../Meet/Meet'
 import JoinRoom from '../Meet/JoinRoom'
 import JoinMeet from '../Meet/JoinMeet'
+import NotFound from '../Static/NotFound'
 
-//styling
-import { Icon } from 'semantic-ui-react'
+// components
+import Tab from './Tab'
 
 /**
  * @param routes array of all the routes in application
@@ -21,13 +22,27 @@ import { Icon } from 'semantic-ui-react'
 
 // routes
 const routes = [
-  { path: 'chat', component: Chat, name: 'Chat' },
-  { path: 'meet', component: Meet, name: 'Teams' },
+  { path: '', component: MyWork, name: 'My Work'},
+  { path: 'assign', component: AssignedWork, name: 'Assign Work' },
+  { path: 'team', component: Meet, name: 'Teams' },
 ]
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
 
 function Content() {
 
   const user = useSelector(state => state.user)
+
+  const classes = useStyles();
 
   useEffect(() => {
     // initialize peer connection
@@ -36,44 +51,28 @@ function Content() {
 
   return (
     <Router>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand">Chat App</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <Tab routes={routes} />
+      {/* <div className={classes.root}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}> */}
+            <Switch>
+              {/* <Route exact path="/" component={Welcome} /> */}
               {
                 routes.map((route) => {
-                  return (
-                    <li class="nav-item">
-                      <Link to={route.path} className="sidenav-icons"><Icon name={route.name} />{route.name}</Link>
-                    </li>
-                  )
+                  return (<Route
+                    exact
+                    path={"/" + route.path}
+                    component={route.component}
+                  />)
                 })
               }
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <div class="row">
-          <Switch>
-            <Route exact path="/" component={Welcome} />
-            {
-              routes.map((route) => {
-                return (<Route
-                  exact
-                  path={"/" + route.path}
-                  component={route.component}
-                  />)
-              })
-            }
-            <Route exact path="/meet/:id" component={JoinRoom} />
-            <Route exact path="/meet/:id/join" component={JoinMeet} />
-            <Route component={NotFound} />
-          </Switch>
-        </div>
+              <Route exact path="/team/:id" component={JoinRoom} />
+              <Route exact path="/team/:id/meet" component={JoinMeet} />
+              <Route component={NotFound} />
+            </Switch>
+          {/* </Grid>
+        </Grid>
+      </div> */}
     </Router>
   )
 }

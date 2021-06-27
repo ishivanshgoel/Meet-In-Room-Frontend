@@ -7,20 +7,44 @@
     height: 300px;
     width: 400px;
     object-fit: cover;
-    padding: 8px;
-    border: 1px solid white;
-    border-radius: 0.2rem;
+    border: 4px solid rgb(98,100,167);
+    margin: 2px;
  }
+
+ video:hover{
+    
+ }
+
+ .meet-prejoin-video{
+    height: 300px;
+    width: 400px;
+    object-fit: cover;
+    border: 4px solid rgb(98,100,167);
+ }
+
+ @media only screen and (max-width: 600px) {
+    .meet-prejoin-video{
+        height: auto;
+        width: 100%;
+     }
+  }
 
 .meet {
     height: 100vh;
     display: flex;
+    position:absolute;
+    top:0px;
+    right: 0px;
+    bottom: 0px;
+    left: -12px;
 }
 
 .meet-left {
     flex: 0.8;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll;
 }
 
 .meet-right {
@@ -37,17 +61,18 @@
 }
 
 .meet-right {
-    background-color: #242324;
+    background-color: black;
     border-left: 1px solid #3D3D42;
 }
 
 .meet-bottom {
-    background-color: black;
     color: #D2D2D2;
     display: flex;
     justify-content: center;
     min-height: 50px;
-    padding: 30px;
+    position: fixed;
+    top: 90vh;
+    left: 50vh;
 }
 
 .meet-bottom-block {
@@ -76,7 +101,7 @@
 
 .meet-header {
     padding-top: 5px;
-    color: #F5F5F5;
+    color: white;
     text-align: center;
 }
 
@@ -102,6 +127,10 @@
     color: #F5F5F5;
 }
 
+.meet-dropdown-item:hover{
+    cursor: pointer;
+}
+
 .leave-meeting {
     color: #EB534B;
 }
@@ -116,6 +145,10 @@
 
 .meet-icon{
     font-size: 1.8em !important;
+}
+
+.meet-icon:hover{
+    color: rgb(98,100,167)
 }
 
 .custom-phone:hover{

@@ -10,6 +10,7 @@ import MyWork from '../MyWork/MyWork'
 import Meet from '../Meet/Meet'
 import JoinRoom from '../Meet/JoinRoom'
 import JoinMeet from '../Meet/JoinMeet'
+import AddPeople from '../Meet/AddPeople'
 import NotFound from '../Static/NotFound'
 
 // components
@@ -68,6 +69,7 @@ function Content() {
               }
               <Route exact path="/team/:id" component={JoinRoom} />
               <Route exact path="/team/:id/meet" component={JoinMeet} />
+              <Route exact path="/team/:id/add" component={AddPeople} />
               <Route component={NotFound} />
             </Switch>
           {/* </Grid>

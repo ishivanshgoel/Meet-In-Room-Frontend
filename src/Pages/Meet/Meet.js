@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button'
 
 // compoents
 import Notification from '../../Components/Notification/Notification'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,6 +31,7 @@ function Meet() {
     const classes = useStyles();
 
     const user = useSelector((state) => state.user)
+    const history = useHistory()
     const [rooms, setRooms] = useState([])
 
     useEffect(async () => {

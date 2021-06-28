@@ -25,7 +25,7 @@ export default function TeamCards({rooms}) {
         >
           {rooms && rooms.map((room) => (
             <Grid item xs={3} key={rooms.indexOf(room)}>
-              <Card roomId={room.roomId} name={room.name} />
+              <Card roomId={room.roomId} name={room.name} type={room.type} />
             </Grid>
           ))}
         </Grid>

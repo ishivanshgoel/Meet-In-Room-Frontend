@@ -3,7 +3,7 @@ import { useHistory } from 'react-router'
 import { Button, Card, Image } from 'semantic-ui-react'
 
 
-function RoomCard({ name, roomId }) {
+function RoomCard({ name, roomId, type }) {
 
     let history = useHistory()
 
@@ -26,6 +26,13 @@ function RoomCard({ name, roomId }) {
                     <Button basic color='green' onClick={handleJoinRoom} name={roomId}>
                         Join Room
                     </Button>
+                    {
+                        type=='owner'?(
+                            <Button basic color='green' onClick={()=>history.push(`/team/${roomId}/add`)} name={roomId}>
+                                Add People
+                            </Button>
+                        ):(null)    
+                    }
                 </Card.Content>
             </Card>
         </Card.Group>

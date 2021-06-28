@@ -12,9 +12,10 @@ import ButtonGroup from '@material-ui/core/ButtonGroup'
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Call from '@material-ui/icons/Call'
+import CallEnd from '@material-ui/icons/CallEnd'
 
 import { getAllInputAudio, getAllOutputAudio, getAllCameras } from './getConnectedDevices'
 
@@ -89,7 +90,9 @@ function JoinRoom() {
     let handleMeetJoin = (event) => {
 
         if (mediaCheck) {
-            history.push(`/team/${id}/meet`)
+            // history.push(`/team/${id}/meet`)
+            const win = window.open(`/team/${id}/meet`, "_blank");
+            win.focus();
         } else {
             alert('Cannot Access Media')
         }
@@ -124,8 +127,8 @@ function JoinRoom() {
                                 id="join-room-camera"
                             >
                                 {
-                                    cameraDevices && cameraDevices.map((device)=>(
-                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={()=>{setCamera(device.deviceId)}}>{device.label}</MenuItem>
+                                    cameraDevices && cameraDevices.map((device) => (
+                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={() => { setCamera(device.deviceId) }}>{device.label}</MenuItem>
                                     ))
                                 }
                             </Select>
@@ -138,8 +141,8 @@ function JoinRoom() {
                                 id="join-room-mic"
                             >
                                 {
-                                    inputAudio && inputAudio.map((device)=>(
-                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={()=>{setSpeaker(device.deviceId)}}>{device.label}</MenuItem>
+                                    inputAudio && inputAudio.map((device) => (
+                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={() => { setSpeaker(device.deviceId) }}>{device.label}</MenuItem>
                                     ))
                                 }
                             </Select>
@@ -152,8 +155,8 @@ function JoinRoom() {
                                 id="join-room-audio"
                             >
                                 {
-                                    outputAudio && outputAudio.map((device)=>(
-                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={()=>{setMic(device.deviceId)}}>{device.label}</MenuItem>
+                                    outputAudio && outputAudio.map((device) => (
+                                        <MenuItem value={device.deviceId} key={device.deviceId} onClick={() => { setMic(device.deviceId) }}>{device.label}</MenuItem>
                                     ))
                                 }
                             </Select>
@@ -161,9 +164,9 @@ function JoinRoom() {
 
                         <br></br>
                         <div style={{ margin: "30px" }}>
-                            <ButtonGroup color="secondary" aria-label="outlined secondary button group">
-                                <Button color="secondary" onClick={handleMeetJoin}>Join</Button>
-                                <Button color="primary" onClick={handleMoveBack}>Decline</Button>
+                            <ButtonGroup>
+                                <Button color="primary" onClick={handleMeetJoin}><Call /><span style={{ margin: "10px" }}>Join</span></Button>
+                                <Button color="secondary" onClick={handleMoveBack}><CallEnd /><span style={{ margin: "10px" }}>Decline</span></Button>
                             </ButtonGroup>
                         </div>
                     </Paper>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import Send from '@material-ui/icons/Send'
 
 // components
 import AssignCard from '../../Components/AssignCard/AssignCard'
@@ -17,8 +19,8 @@ const useStyles = makeStyles({
     },
     submitButton: {
         position: 'fixed',
-        bottom: 4,
-        right: 10
+        bottom: 20,
+        right: 80
     }
 });
 
@@ -84,7 +86,7 @@ export default function ChatRight({ userId, userEmail }) {
                 ) : (null)
             }
             <TextField
-                style={{ margin: 2, width: 1000 }}
+                style={{ margin: 2, width: 1000, backgroundColor: 'white' }}
                 placeholder="Type Something"
                 margin="normal"
                 InputLabelProps={{
@@ -93,8 +95,17 @@ export default function ChatRight({ userId, userEmail }) {
                 variant="outlined"
                 className={classes.textField}
                 onChange={(event) => setTask(event.target.value)} />
-            <button onClick={handleSubmit} className={classes.submitButton}>Submit</button>
+            <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                endIcon={<Send/>}
+                onClick={handleSubmit}
+                className={classes.submitButton}
+            >
+                Send
+            </Button>
         </div>
 
-    );
+            );
 }

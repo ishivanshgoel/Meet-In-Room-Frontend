@@ -13,7 +13,8 @@ function userReducers(state = initialState, action) {
             return {
                 ...state,
                 email: action.email,
-                user: action.user
+                user: action.user,
+                token: action.token
             }
         case REMOVEUSER:
             

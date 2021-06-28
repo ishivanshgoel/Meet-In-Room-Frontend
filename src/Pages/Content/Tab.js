@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Menu from './Menu'
 
 import { useHistory } from 'react-router'
 
@@ -38,6 +39,7 @@ export default function CenteredTabs({ routes }) {
                         )
                     })
                 }
+                <Menu />
             </Tabs>
         </Paper>
     );

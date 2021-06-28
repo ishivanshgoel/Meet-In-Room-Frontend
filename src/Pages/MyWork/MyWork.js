@@ -9,6 +9,7 @@ import post from '../../Helpers/Request/post'
 
 // components
 import Notification from '../../Components/Notification/Notification'
+import Illustration from '../Static/Illustration'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,40 +27,44 @@ const useStyles = makeStyles((theme) => ({
 function MyWork() {
     const user = useSelector((state) => state.user)
     const email = useSelector((state) => state.email)
-    const classes = useStyles();
 
     const [fetched, setFetched] = useState(false)
     const [myTasks, setMyTasks] = useState([])
-    useEffect(async() => {
+    useEffect(async () => {
         const response = await post('mywork', {
             myEmail: email
         })
-        if(response.data && response.data.myWork){
+        if (response.data && response.data.myWork) {
             setMyTasks(response.data.myWork)
-        } else{
+            if (response.data.myWork.length > 0) setFetched(true)
+        } else {
             Notification('Error', 'Cannot fetch your tasks', 'danger')
         }
-        setFetched(true)
     }, [])
 
     return (
-        <Grid
-            container
-            spacing={2}
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-start"
-        >
+        <>
             {
                 fetched ? (
-                    myTasks && myTasks.map((task) => (
-                        <Grid item xs={3} key={myTasks.indexOf(task)}>
-                            <Card task={task.task} status={task.status} date={task.date} by={task.by} workId={task.workId}/>
-                        </Grid>
-                    ))
-                ) : (null)
+                    <Grid
+                        container
+                        spacing={2}
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="flex-start"
+                    >
+                        {
+                            myTasks && myTasks.map((task) => (
+                                <Grid item xs={3} key={myTasks.indexOf(task)}>
+                                    <Card task={task.task} status={task.status} date={task.date} by={task.by} workId={task.workId} />
+                                </Grid>
+                            )) 
+                        }
+                    </Grid>
+
+                ) : (<Illustration text='No Tasks Found!!' />)
             }
-        </Grid>
+        </>
     )
 }
 

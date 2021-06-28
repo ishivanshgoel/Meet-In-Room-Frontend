@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Avatar from 'react-avatar'
+import Illustration from '../Static/Illustration'
 
 // css
 import './CSS/assignedWork.css'
@@ -156,11 +157,11 @@ function ResponsiveDrawer(props) {
                             </Hidden>
                         </nav>
                         <main className={classes.content}>
-                            <div className={classes.toolbar} />
+                            {/* <div className={classes.toolbar} /> */}
                                 {
                                     loadRight?(
                                         <AssignedWorkRight userId={loadUser} userEmail={loadUserEmail}/>
-                                    ):(null)
+                                    ):(<Illustration text='Use Sidebar to Navigate!!'/>)
                                 }
                         </main>
                     </div>) : (null)

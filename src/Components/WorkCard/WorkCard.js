@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function RoomCard2({ task, status, date, by, workId }) {
+function WorkCard({ task, status, date, by, workId }) {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -129,4 +129,4 @@ function RoomCard2({ task, status, date, by, workId }) {
     )
 }
 
-export default RoomCard2
+export default WorkCard

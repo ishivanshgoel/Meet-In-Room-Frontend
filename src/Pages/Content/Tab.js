@@ -35,7 +35,7 @@ export default function CenteredTabs({ routes }) {
                 {
                     routes.map((route) => {
                         return (
-                            <Tab label={route.name} onClick={()=>{history.push(`${route.path}`)}}/>
+                            <Tab label={route.name} onClick={()=>{history.push(`/${route.path}`)}}/>
                         )
                     })
                 }

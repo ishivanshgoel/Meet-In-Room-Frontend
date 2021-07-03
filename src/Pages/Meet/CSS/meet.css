@@ -3,7 +3,7 @@
     justify-content: center;
     flex-wrap: wrap;
  }
- video{
+ /* video{
     height: 300px;
     width: 400px;
     object-fit: cover;
@@ -13,7 +13,7 @@
 
  video:hover{
     
- }
+ } */
 
  .meet-prejoin-video{
     height: 300px;

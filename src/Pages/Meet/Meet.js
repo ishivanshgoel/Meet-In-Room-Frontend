@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import post from '../../Helpers/Request/post'
-
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
 import TeamCards from './TeamCards'
 import { Modal, Form } from 'react-bootstrap'
 import Button from '@material-ui/core/Button'
+import Create from '@material-ui/icons/Create'
 
 // compoents
 import Notification from '../../Components/Notification/Notification'
-import { useHistory } from 'react-router-dom'
+import Illustration from '../Static/Illustration'
+
+// helpers
+import post from '../../Helpers/Request/post'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,7 +37,7 @@ function Meet() {
     const [rooms, setRooms] = useState([])
 
     useEffect(async () => {
-        
+
         const myRooms = await post('myrooms', {
             myId: user
         })
@@ -52,7 +54,16 @@ function Meet() {
     const handleShow = () => setShow(true);
     const [teamName, setTeamName] = useState(null)
     const handleCreateTeam = async (event) => {
-        console.log(teamName)
+        
+        if(!teamName || teamName.length<2){
+            Notification('Warning', 'Team Name length cannot be less than 2', 'warning')
+            return
+        }
+        else if (teamName.length>10){
+            Notification('Warning', 'Team Name length cannot exceed 10', 'warning')
+            return
+        }
+
         const response = await post('createroom', {
             myId: user,
             name: teamName
@@ -61,7 +72,7 @@ function Meet() {
         if (response.data) {
             console.log(response.data)
             setRooms([
-                ... rooms,
+                ...rooms,
                 response.data
             ])
             Notification('Success', 'New Team Created', 'success')
@@ -72,10 +83,13 @@ function Meet() {
     // ################## create team model ends ##################
 
     return (
-        <Paper className={classes.paper}>
-            <Button variant="contained" color="primary" onClick={handleShow}>
-                New Team
-            </Button>
+        // <Paper className={classes.paper}>
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginRight: '20px' }}>
+                <Button variant="contained" color="primary" onClick={handleShow}>
+                    <Create /> <span style={{ margin: '10px' }}>New Team</span>
+                </Button>
+            </div>
 
             {/* new team modal */}
             <Modal
@@ -84,30 +98,32 @@ function Meet() {
                 backdrop="static"
                 keyboard={false}
             >
-                <Modal.Header closeButton>
-                    <Modal.Title>Create New Team</Modal.Title>
+                <Modal.Header>
+                    New Team
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Team Name</Form.Label>
-                            <Form.Control type="text" placeholder="team name" onChange={(event) => setTeamName(event.target.value)} />
+                            <Form.Control type="text" placeholder="Team Name" onChange={(event) => setTeamName(event.target.value)} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="contained" color="primary" onClick={handleClose} style={{margin:"10px"}}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleCreateTeam}>Create</Button>
+                    <Button variant="contained" color="primary" onClick={handleCreateTeam}>Create</Button>
                 </Modal.Footer>
             </Modal>
             {/* new team modal ends */}
-            
+
             {
-                rooms && <TeamCards rooms={rooms} />
+                rooms ? 
+                    (rooms.length > 0 ? (<TeamCards rooms={rooms} />) : (null)) :
+                    (<Illustration text='You are not added to any Team yet!! Create One to start!!' />) // if not able to fetch the rooms
             }
-        </Paper>
+        </div>
     )
 }
 

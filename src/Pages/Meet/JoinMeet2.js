@@ -8,6 +8,7 @@ import {
     REMOVEPARTICIPANT,
     SETMESSAGE
 } from '../../Reducers/actionTypes'
+import RecordRTC, { invokeSaveAsDialog, CanvasRecorder } from 'recordrtc'
 import Button from '@material-ui/core/Button'
 import Mic from '@material-ui/icons/Mic'
 import MicOff from '@material-ui/icons/MicOff'
@@ -48,6 +49,7 @@ function JoinMeet2() {
 
     const [sideComponent, setSideComponent] = useState('participants')
     const myVideo = useRef() // reference to local video
+    const recorderRef = useRef(null) // video recording
     const { id } = useParams(); // meeting room id
 
 
@@ -72,11 +74,13 @@ function JoinMeet2() {
     useEffect(async () => {
 
         handle.enter()
+
         // join the meeting room
         socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
 
         // event fired when any of the user in the room gets disconnected
         socket.on('user-disconnected', ({ userId, userEmail }) => {
+            console.log("")
             connectedUsers[userId] && less(userId)
             connectedUsers[userId] = false
             dispatch({
@@ -88,7 +92,6 @@ function JoinMeet2() {
 
         // new message
         socket.on('new-message', ({ from, message }) => {
-            // Notification('New Message','', 'success')
             let newMessage = { from, message }
             dispatch({
                 type: SETMESSAGE,
@@ -116,7 +119,7 @@ function JoinMeet2() {
         })
 
         console.log("After Add yourself ", meetingParticipants)
-        
+
         // set to local element
         myVideo.current.srcObject = myStreamGlobal
         console.log("My Global Stream after setting local video ", myStreamGlobal)
@@ -129,56 +132,54 @@ function JoinMeet2() {
             let metadata = call.metadata
             let userId = metadata.userId
             let userEmail = metadata.userEmail
-            if (!connectedUsers[userId]) {
-                connectedUsers[userId] = true
-                // send you stream
-                call.answer(myStreamGlobal)
 
-                // append user stream to grid
-                call.on('stream', (stream) => {
-                    // add in the participants list
-                    dispatch({
-                        type: MEETINGPARTICIPANTS,
-                        newParticipant: userEmail
-                    })
-                    add(stream, userId, userEmail)
+            // send you stream
+            call.answer(myStreamGlobal)
 
-                })
-            }
-        })
-
-
-    }, [])
-
-    // when someone joins our room, call them using their peer id
-    function connectPeers(userId, userEmail) {
-        if (!connectedUsers[userId]) {
-            connectedUsers[userId] = true
-            // send userId in metadata of call
-            let options = { metadata: { "type": "video-call", "userId": user, "userEmail": email } }
-            const call = peer.call(userId, myStreamGlobal, options)
-
-            call.on('stream', userVideoStream => {
-                Notification("New User Connected", `${userEmail} Joined`, 'success')
+            // append user stream to grid
+            call.on('stream', (stream) => {
+                // add in the participants list
                 dispatch({
                     type: MEETINGPARTICIPANTS,
                     newParticipant: userEmail
                 })
+                if (!connectedUsers[userId]) {
+                    add(stream, userId, userEmail)
+                    connectedUsers[userId] = true
+                }
+            })
+        })
+    }, [])
+
+    // when someone joins our room, call them using their peer id
+    function connectPeers(userId, userEmail) {
+        // send userId in metadata of call
+        let options = { metadata: { "type": "video-call", "userId": user, "userEmail": email } }
+        const call = peer.call(userId, myStreamGlobal, options)
+
+        call.on('stream', userVideoStream => {
+            Notification("New User Connected", `${userEmail} Joined`, 'success')
+            dispatch({
+                type: MEETINGPARTICIPANTS,
+                newParticipant: userEmail
+            })
+            if (!connectedUsers[userId]) {
+                connectedUsers[userId] = true
                 add(userVideoStream, userId, userEmail)
             }
-            )
-
-            // close video
-            call.on('close', () => {
-                less(userId)
-                dispatch({
-                    type: REMOVEPARTICIPANT,
-                    removeParticipant: userEmail
-                })
-                connectedUsers[userId] = false
-                Notification('User Left', `${userEmail} left the meeting`, 'warning')
-            })
         }
+        )
+
+        // close video
+        call.on('close', () => {
+            connectedUsers[userId] && less(userId)
+            dispatch({
+                type: REMOVEPARTICIPANT,
+                removeParticipant: userEmail
+            })
+            connectedUsers[userId] = false
+            Notification('User Left', `${userEmail} left the meeting`, 'warning')
+        })
     }
 
     const handleSendMessage = () => {
@@ -220,6 +221,37 @@ function JoinMeet2() {
 
     const handleLeaveMeet = () => {
         window.location.href = "/team"
+    }
+
+    async function captureScreen(){
+        let captureStream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+              cursor: "always"
+            },
+            audio: false
+          });
+        return captureStream
+    }
+
+    const handleRecord = async () => {
+        let videoGrid = document.getElementById('Dish')
+        console.log(videoGrid)
+        let recorder = new CanvasRecorder(videoGrid, { disableLogs: false, useWhammyRecorder: true });
+        recorder.record();
+        // recorderRef.current = RecordRTC(await captureScreen(), {
+        //     type: 'video',
+        // });
+        // recorderRef.current.startRecording();
+        const sleep = m => new Promise(r => setTimeout(r, m));
+        await sleep(7000);
+
+        recorder.stop((blob) => {
+            // let blob = recorderRef.current.getBlob();
+            // video.src = URL.createObjectURL(blob);
+            invokeSaveAsDialog(blob, 'test.webm');
+        });
+        
+    
     }
 
     return (
@@ -266,20 +298,17 @@ function JoinMeet2() {
                                 <People />
                             </Button>
                         </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={handleRecord}>
+                                <People />
+                            </Button>
+                        </div>
                     </div>
 
                     {/* video grid */}
-                    {
-                        screenShare ? (
-                            <div id="screen-share">
-
-                            </div>
-                        ) : (
-                            <div id="Dish">
-                                <video ref={myVideo} autoPlay className="Camera" muted="muted"></video>
-                            </div>
-                        )
-                    }
+                    <div id="Dish">
+                        <video ref={myVideo} autoPlay className="Camera" muted="muted"></video>
+                    </div>
                 </div>
                 <div className="col-2 meet-sidebar">
                     <div className="meet-righ">

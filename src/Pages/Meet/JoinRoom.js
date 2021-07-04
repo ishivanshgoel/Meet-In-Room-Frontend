@@ -38,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+let myStreamGlobal
+
 function JoinRoom() {
 
     // reference to video element
@@ -78,6 +80,7 @@ function JoinRoom() {
             audio: true,
             video: true
         }).then((myStream) => {
+            myStreamGlobal = myStream
             myVideo.current.srcObject = myStream
             setMediaCheck(true)
         }).catch((error) => {
@@ -89,25 +92,15 @@ function JoinRoom() {
 
     let handleMeetJoin = (event) => {
 
-        if (mediaCheck) {
-            history.push(`/team/${id}/meet`)
-            // const win = window.open(`/team/${id}/meet`, "_blank");
-            // win.focus();
-        } else {
-            alert('Cannot Access Media')
-        }
-
+        const tracks = myStreamGlobal.getTracks()
+        tracks.forEach((track) => track.stop())
+        history.push(`/team/${id}/meet`)
     }
 
     let handleMoveBack = (event) => {
-
-        // handle move back
-        console.log("Back button")
-
-        console.log(camera)
-        console.log(mic)
-        console.log(speaker)
-
+        const tracks = myStreamGlobal.getTracks()
+        tracks.forEach((track) => track.stop())
+        window.location.href = "/team"
     }
 
     const classes = useStyles();

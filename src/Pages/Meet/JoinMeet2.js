@@ -8,7 +8,18 @@ import {
     REMOVEPARTICIPANT,
     SETMESSAGE
 } from '../../Reducers/actionTypes'
-
+import Button from '@material-ui/core/Button'
+import Mic from '@material-ui/icons/Mic'
+import MicOff from '@material-ui/icons/MicOff'
+import CallEnd from '@material-ui/icons/CallEnd'
+import Videocam from '@material-ui/icons/Videocam'
+import VideocamOff from '@material-ui/icons/VideocamOff'
+import Message from '@material-ui/icons/Message'
+import Settings from '@material-ui/icons/Settings'
+import People from '@material-ui/icons/People'
+import Send from '@material-ui/icons/Send'
+import Avatar from 'react-avatar'
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import './CSS/meet2.css'
 import './JS/joinmeet2.js'
@@ -17,6 +28,10 @@ import { add, less } from './JS/joinmeet2'
 // components
 import Notification from '../../Components/Notification/Notification'
 
+
+let myStreamGlobal // global stream of user
+let connectedUsers = {} // map of connected peers
+
 function JoinMeet2() {
 
     const user = useSelector((state) => state.user)
@@ -24,12 +39,17 @@ function JoinMeet2() {
     const messages = useSelector((state) => state.messages)
     const meetingParticipants = useSelector((state) => state.meetingParticipants)
     const dispatch = useDispatch()
+    const handle = useFullScreenHandle();
 
-    const [sideComponent, setSideComponent] = useState('chat')
+    // mic and video status
+    const [micStatus, setMicStatus] = useState(true)
+    const [videoStatus, setVideoStatus] = useState(true)
+    const [screenShare, setScreenShare] = useState(false)
+
+    const [sideComponent, setSideComponent] = useState('participants')
     const myVideo = useRef() // reference to local video
     const { id } = useParams(); // meeting room id
-    let connectedUsers = {} // map of connected peers
-    let participantList = []
+
 
     // camera constraints
     function setConstraints() {
@@ -37,7 +57,7 @@ function JoinMeet2() {
             // 'audio': {
             //     'echoCancellation': true,
             // },
-            'audio': false,
+            'audio': true,
             'video': true
         }
         return constraints
@@ -49,11 +69,9 @@ function JoinMeet2() {
         return await navigator.mediaDevices.getUserMedia(cons);
     }
 
-    let myGlobalStream
-
-
     useEffect(async () => {
 
+        handle.enter()
         // join the meeting room
         socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
 
@@ -82,11 +100,14 @@ function JoinMeet2() {
         // when someone connects to our room
         socket.on('new-user-connect', ({ userId, userEmail }) => {
             console.log('New User Connected to Our Room ', userEmail)
-            connectPeers(userId, userEmail)
+            if (!connectedUsers[userId]) {
+                connectPeers(userId, userEmail)
+            }
         })
 
         // get stream
-        myGlobalStream = await openStream()
+        myStreamGlobal = await openStream()
+        console.log("My Global Stream after useEffect ", myStreamGlobal)
 
         // add yourself in participants list
         dispatch({
@@ -95,103 +116,184 @@ function JoinMeet2() {
         })
 
         console.log("After Add yourself ", meetingParticipants)
-        // }
-
+        
         // set to local element
-        myVideo.current.srcObject = myGlobalStream
+        myVideo.current.srcObject = myStreamGlobal
+        console.log("My Global Stream after setting local video ", myStreamGlobal)
+
 
         // listen for incoming calls
         peer.on('call', call => {
 
             // metadata from call
             let metadata = call.metadata
-
-            // send you stream
-            call.answer(myGlobalStream)
-
             let userId = metadata.userId
             let userEmail = metadata.userEmail
-
-            // append user stream to grid
-            call.on('stream', (stream) => {
+            if (!connectedUsers[userId]) {
                 connectedUsers[userId] = true
-                // add in the participants list
-                dispatch({
-                    type: MEETINGPARTICIPANTS,
-                    newParticipant: userEmail
+                // send you stream
+                call.answer(myStreamGlobal)
+
+                // append user stream to grid
+                call.on('stream', (stream) => {
+                    // add in the participants list
+                    dispatch({
+                        type: MEETINGPARTICIPANTS,
+                        newParticipant: userEmail
+                    })
+                    add(stream, userId, userEmail)
+
                 })
-                add(stream, userId, userEmail)
-            })
+            }
         })
+
 
     }, [])
 
     // when someone joins our room, call them using their peer id
     function connectPeers(userId, userEmail) {
-
-        // send userId in metadata of call
-        let options = { metadata: { "type": "video-call", "userId": user, "userEmail": email } }
-        const call = peer.call(userId, myGlobalStream, options)
-
-        call.on('stream', userVideoStream => {
+        if (!connectedUsers[userId]) {
             connectedUsers[userId] = true
-            Notification("New User Connected", `${userEmail} Joined`, 'success')
-            dispatch({
-                type: MEETINGPARTICIPANTS,
-                newParticipant: userEmail
-            })
-            add(userVideoStream, userId, userEmail)
-        }
-        )
+            // send userId in metadata of call
+            let options = { metadata: { "type": "video-call", "userId": user, "userEmail": email } }
+            const call = peer.call(userId, myStreamGlobal, options)
 
-        // close video
-        call.on('close', () => {
-            less(userId)
-            dispatch({
-                type: REMOVEPARTICIPANT,
-                removeParticipant: userEmail
+            call.on('stream', userVideoStream => {
+                Notification("New User Connected", `${userEmail} Joined`, 'success')
+                dispatch({
+                    type: MEETINGPARTICIPANTS,
+                    newParticipant: userEmail
+                })
+                add(userVideoStream, userId, userEmail)
+            }
+            )
+
+            // close video
+            call.on('close', () => {
+                less(userId)
+                dispatch({
+                    type: REMOVEPARTICIPANT,
+                    removeParticipant: userEmail
+                })
+                connectedUsers[userId] = false
+                Notification('User Left', `${userEmail} left the meeting`, 'warning')
             })
-            Notification('User Left', `${userEmail} left the meeting`, 'warning')
-        })
+        }
     }
 
     const handleSendMessage = () => {
-        console.log('Handle Send Message')
+        setSideComponent('chat')
         const message = window.prompt('Enter Message ')
-        let newMessage = {
-            message,
-            from: email
+        if (message) {
+            let newMessage = {
+                message,
+                from: email
+            }
+            dispatch({
+                type: SETMESSAGE,
+                newMessage: newMessage
+            })
+            socket.emit('send-message', newMessage)
         }
-        dispatch({
-            type: SETMESSAGE,
-            newMessage: newMessage
-        })
-        socket.emit('send-message', newMessage)
+        handle.enter()
+    }
+
+    const handleControls = () => {
+
+    }
+
+    const handleMute = () => {
+        if (myStreamGlobal && myStreamGlobal.getAudioTracks()) {
+            myStreamGlobal.getAudioTracks()[0].enabled = !(myStreamGlobal.getAudioTracks()[0].enabled)
+            setMicStatus(!micStatus)
+        } else alert('Cannot Perform Action')
+    }
+
+    const handleVideo = async () => {
+        if (myStreamGlobal && myStreamGlobal.getVideoTracks()) {
+            myStreamGlobal.getVideoTracks()[0].enabled = !(myStreamGlobal.getVideoTracks()[0].enabled)
+            setVideoStatus(!videoStatus)
+        } else {
+            alert('Cannot Perform Action')
+        }
+    }
+
+    const handleLeaveMeet = () => {
+        window.location.href = "/team"
     }
 
     return (
         <>
-            <div className="row">
+            <div className="row" style={{ backgroundColor: "black" }}>
                 <div className="col-10">
-                    <div id="Dish">
-                        <video ref={myVideo} autoPlay className="Camera" muted="muted"></video>
-
+                    <div className="controls-left">
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={handleMute}>
+                                {
+                                    micStatus ? <Mic /> : <MicOff />
+                                }
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={handleVideo}>
+                                {
+                                    videoStatus ? <Videocam /> : <VideocamOff />
+                                }
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={() => setSideComponent("controls")}>
+                                <Settings />
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="secondary" onClick={handleLeaveMeet}>
+                                <CallEnd />
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={() => setSideComponent("chat")}>
+                                <Message />
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={handleSendMessage}>
+                                <Send />
+                            </Button>
+                        </div>
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={() => setSideComponent("participants")}>
+                                <People />
+                            </Button>
+                        </div>
                     </div>
+
+                    {/* video grid */}
+                    {
+                        screenShare ? (
+                            <div id="screen-share">
+
+                            </div>
+                        ) : (
+                            <div id="Dish">
+                                <video ref={myVideo} autoPlay className="Camera" muted="muted"></video>
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="col-2 meet-sidebar">
-                    <div className="meet-right">
+                    <div className="meet-righ">
                         {
                             sideComponent == 'participants' ? (
                                 <>
 
                                     <div className="meet-right-header">
-                                        <h6>Participants</h6>
-                                        <button onClick={handleSendMessage}>New Message</button>
+                                        <h3><People /> Participants</h3>
                                     </div>
                                     <div className="meet-right-window">
                                         {
                                             meetingParticipants && meetingParticipants.map((participant) => (
-                                                <p style={{ color: 'white' }}>{participant}</p>
+                                                <p style={{ color: 'white' }}><Avatar name={participant} size="30" textSizeRatio={0.75} round="20px" style={{ margin: "10px" }} /> {participant}</p>
                                             ))
                                         }
                                     </div>
@@ -203,20 +305,19 @@ function JoinMeet2() {
                             sideComponent == "chat" && (
                                 <>
                                     <div className="meet-header">
-                                        <h6>Chat</h6>
-                                        <button onClick={handleSendMessage}>New Message</button>
+                                        <h3><Message /> Chat</h3>
                                     </div>
                                     <div className="meet-right-window">
                                         {
                                             messages && messages.map(({ from, message }, index) =>
                                                 from === email ? (
-                                                    <div id={`${from}-${index}`} className="myMessage">
-                                                        <p>You</p>
+                                                    <div id={`${from}-${index}`} className="meet-message">
+                                                        <p><b>You</b></p>
                                                         <p>{message}</p>
                                                     </div>
                                                 ) : (
-                                                    <div id={`${from}-${index}`} className="peerMessage">
-                                                        <p>{from}</p>
+                                                    <div id={`${from}-${index}`} className="meet-message">
+                                                        <p><b>{from}</b></p>
                                                         <p>{message}</p>
                                                     </div>
                                                 )
@@ -224,19 +325,17 @@ function JoinMeet2() {
                                         }
                                     </div>
                                 </>
-
                             )
                         }
                         {
                             sideComponent == "controls" && (
                                 <>
-                                <div className="meet-header">
-                                    <h6>Controls</h6>
-                                    <button onClick={handleSendMessage}>New Message</button>
-                                </div>
-                                <div className="meet-right-window">
+                                    <div className="meet-header">
+                                        <span><h3>Controls</h3></span>
+                                    </div>
+                                    <div className="meet-right-window">
 
-                                </div>
+                                    </div>
                                 </>
                             )
                         }

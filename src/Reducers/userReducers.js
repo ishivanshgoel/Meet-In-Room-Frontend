@@ -60,23 +60,31 @@ function userReducers(state = initialState, action) {
         
         case MEETINGPARTICIPANTS:
             console.log("Add new participant ", action.newParticipant)
-            return {
-                ...state,
-                meetingParticipants: [
-                    ... state.meetingParticipants,
-                    action.newParticipant
-                ]
+            let allParticipants = state.meetingParticipants
+            let output = allParticipants.find(p => p === action.newParticipant)
+            if(!output){
+                return {
+                    ...state,
+                    meetingParticipants: [
+                        ... state.meetingParticipants,
+                        action.newParticipant
+                    ]
+                }
+            } else{
+                return{
+                    ... state
+                }
             }
         
         case REMOVEPARTICIPANT:
-            let allParticipants = state.meetingParticipants
-            if(allParticipants){
-                allParticipants = allParticipants
+            let allParticipant = state.meetingParticipants
+            if(allParticipant){
+                allParticipant = allParticipant
                                     .filter(e => e !== action.removeParticipant)
             }
             return {
                 ...state,
-                meetingParticipants: allParticipants
+                meetingParticipants: allParticipant
             }
 
         case SETMESSAGE:

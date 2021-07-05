@@ -5,7 +5,8 @@ import { SETUSER,
         SETSTREAM, 
         MEETINGPARTICIPANTS,
         REMOVEPARTICIPANT,
-        SETMESSAGE 
+        SETMESSAGE, 
+        SETMESSAGES
     } 
 from './actionTypes' 
 
@@ -85,6 +86,12 @@ function userReducers(state = initialState, action) {
             return {
                 ...state,
                 meetingParticipants: allParticipant
+            }
+        
+        case SETMESSAGES:
+            return {
+                ...state,
+                messages: action.allMessages
             }
 
         case SETMESSAGE:

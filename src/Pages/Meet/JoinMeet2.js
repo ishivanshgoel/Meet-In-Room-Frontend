@@ -75,8 +75,8 @@ function JoinMeet2() {
 
         handle.enter()
 
-        // join the meeting room
-        socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
+        // // join the meeting room
+        // socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
 
         // event fired when any of the user in the room gets disconnected
         socket.on('user-disconnected', ({ userId, userEmail }) => {

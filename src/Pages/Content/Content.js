@@ -9,6 +9,7 @@ import AssignedWork from '../AssignedWork/AssignedWork'
 import MyWork from '../MyWork/MyWork'
 import Meet from '../Meet/Meet'
 import JoinRoom from '../Meet/JoinRoom'
+import RoomChat from '../Meet/RoomChat'
 import JoinMeet2 from '../Meet/JoinMeet2'
 import AddPeople from '../Meet/AddPeople'
 import NotFound from '../Static/NotFound'
@@ -70,6 +71,7 @@ function Content() {
               <Route exact path="/team/:id" component={JoinRoom} />
               <Route exact path="/team/:id/meet" component={JoinMeet2} />
               <Route exact path="/team/:id/add" component={AddPeople} />
+              <Route exact path="/team/:id/chat" component={RoomChat} />
               <Route component={NotFound} />
             </Switch>
           {/* </Grid>

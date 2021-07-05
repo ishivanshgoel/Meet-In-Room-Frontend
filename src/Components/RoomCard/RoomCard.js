@@ -53,7 +53,7 @@ function RoomCard({ name, roomId, type }) {
     const history = useHistory()
 
     let handleJoinRoom = (roomId) => {
-        history.push(`/team/${roomId}`)
+        history.push(`/team/${roomId}/chat`)
     }
 
     return (

@@ -13,7 +13,9 @@ const endPoints = {
     assignedwork: '/work/assignedwork',
     mywork: '/work/mywork',
     updatestatus: '/work/updatestatus',
-    assign: '/work/assign'
+    assign: '/work/assign',
+    allMessages: '/chat/getall',
+    sendMessage: '/chat/sendMessage'
 
 }
 

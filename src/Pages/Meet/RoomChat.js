@@ -88,13 +88,12 @@ function RoomChat() {
 
 
         // 1. fetch all the previous chats
-        // 2. listen for incoming messages
         const response = await post('allMessages', {
             roomId: id,
         })
 
         if (response.data) {
-            
+            console.log("All Messages ", response.data)
             // set messages in store
             dispatch({
                 type: SETMESSAGES,

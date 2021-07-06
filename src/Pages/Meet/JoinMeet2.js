@@ -6,7 +6,8 @@ import { peer } from '../../Configuration/peer'
 import {
     MEETINGPARTICIPANTS,
     REMOVEPARTICIPANT,
-    SETMESSAGE
+    SETMESSAGE,
+    SETMESSAGES
 } from '../../Reducers/actionTypes'
 import RecordRTC, { invokeSaveAsDialog, CanvasRecorder } from 'recordrtc'
 import Button from '@material-ui/core/Button'
@@ -19,6 +20,8 @@ import Message from '@material-ui/icons/Message'
 import Settings from '@material-ui/icons/Settings'
 import People from '@material-ui/icons/People'
 import Send from '@material-ui/icons/Send'
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
+import FiberSmartRecordIcon from '@material-ui/icons/FiberSmartRecord'
 import Avatar from 'react-avatar'
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -26,12 +29,15 @@ import './CSS/meet2.css'
 import './JS/joinmeet2.js'
 import { add, less } from './JS/joinmeet2'
 
+import post from '../../Helpers/Request/post'
+
 // components
 import Notification from '../../Components/Notification/Notification'
 
 
 let myStreamGlobal // global stream of user
 let connectedUsers = {} // map of connected peers
+let recorder // for screen recording
 
 function JoinMeet2() {
 
@@ -46,6 +52,7 @@ function JoinMeet2() {
     const [micStatus, setMicStatus] = useState(true)
     const [videoStatus, setVideoStatus] = useState(true)
     const [screenShare, setScreenShare] = useState(false)
+    const [meetRecord, setMeetRecord] = useState(false)
 
     const [sideComponent, setSideComponent] = useState('participants')
     const myVideo = useRef() // reference to local video
@@ -149,6 +156,23 @@ function JoinMeet2() {
                 }
             })
         })
+
+        // fetch all room messages
+        const response = await post('allMessages', {
+            roomId: id,
+        })
+
+        if (response.data) {
+            // set messages in store
+            dispatch({
+                type: SETMESSAGES,
+                allMessages: response.data
+            })
+        } else {
+            Notification('Error', 'Cannot fetch chat', 'warning')
+        }
+
+
     }, [])
 
     // when someone joins our room, call them using their peer id
@@ -182,7 +206,7 @@ function JoinMeet2() {
         })
     }
 
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         setSideComponent('chat')
         const message = window.prompt('Enter Message ')
         if (message) {
@@ -190,17 +214,24 @@ function JoinMeet2() {
                 message,
                 from: email
             }
-            dispatch({
-                type: SETMESSAGE,
-                newMessage: newMessage
+            const response = await post('sendMessage', {
+                roomId: id,
+                from: email,
+                message: message
             })
-            socket.emit('send-message', newMessage)
+
+            if (response.data) {
+                dispatch({
+                    type: SETMESSAGE,
+                    newMessage: newMessage
+                })
+                socket.emit('send-message', newMessage)
+            } else {
+                Notification('Error', 'Cannot send message', 'warning')
+            }
+
         }
         handle.enter()
-    }
-
-    const handleControls = () => {
-
     }
 
     const handleMute = () => {
@@ -223,36 +254,50 @@ function JoinMeet2() {
         window.location.href = "/team"
     }
 
-    async function captureScreen(){
+    async function captureScreen() {
         let captureStream = await navigator.mediaDevices.getDisplayMedia({
             video: {
-              cursor: "always"
+                cursor: "always"
             },
             audio: false
-          });
+        });
         return captureStream
     }
 
+    //////////////// Meet-Recording Handler ////////////////
     const handleRecord = async () => {
-        let videoGrid = document.getElementById('Dish')
-        console.log(videoGrid)
-        let recorder = new CanvasRecorder(videoGrid, { disableLogs: false, useWhammyRecorder: true });
-        recorder.record();
-        // recorderRef.current = RecordRTC(await captureScreen(), {
-        //     type: 'video',
-        // });
-        // recorderRef.current.startRecording();
-        const sleep = m => new Promise(r => setTimeout(r, m));
-        await sleep(7000);
+        if (!meetRecord) {
+            navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    cursor: "always",
+                    displaySurface: "window"
+                },
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
+                }
+            }).then(async (stream) => {
+                recorder = new RecordRTC(stream, {
+                    mimeType: "video/webm\;codecs=vp9",
+                    bitsPerSecond: 128000
+                });
+                recorder.startRecording();
+                setMeetRecord(true)
 
-        recorder.stop((blob) => {
-            // let blob = recorderRef.current.getBlob();
-            // video.src = URL.createObjectURL(blob);
-            invokeSaveAsDialog(blob, 'test.webm');
-        });
-        
-    
+            }).catch((err) => {
+                console.log(err)
+            })
+        } else {
+            recorder.stopRecording(() => {
+                let blob = recorder.getBlob()
+                let date = new Date()
+                invokeSaveAsDialog(blob, `Meet Recording ${date}.webm`);
+            })
+            setMeetRecord(false)
+        }
     }
+     //////////////// Meet-Recording Handler End ////////////////
 
     return (
         <>
@@ -273,9 +318,14 @@ function JoinMeet2() {
                                 }
                             </Button>
                         </div>
-                        <div style={{ margin: "2px" }}>
+                        {/* <div style={{ margin: "2px" }}>
                             <Button variant="contained" color="primary" onClick={() => setSideComponent("controls")}>
                                 <Settings />
+                            </Button>
+                        </div> */}
+                        <div style={{ margin: "2px" }}>
+                            <Button variant="contained" color="primary" onClick={handleRecord}>
+                                { meetRecord ? <FiberSmartRecordIcon/> : <FiberManualRecordIcon/> }
                             </Button>
                         </div>
                         <div style={{ margin: "2px" }}>
@@ -295,11 +345,6 @@ function JoinMeet2() {
                         </div>
                         <div style={{ margin: "2px" }}>
                             <Button variant="contained" color="primary" onClick={() => setSideComponent("participants")}>
-                                <People />
-                            </Button>
-                        </div>
-                        <div style={{ margin: "2px" }}>
-                            <Button variant="contained" color="primary" onClick={handleRecord}>
                                 <People />
                             </Button>
                         </div>
@@ -334,7 +379,7 @@ function JoinMeet2() {
                             sideComponent == "chat" && (
                                 <>
                                     <div className="meet-header">
-                                        <h3><Message /> Chat</h3>
+                                        <h3><Message /> Meeting Chat</h3>
                                     </div>
                                     <div className="meet-right-window">
                                         {

@@ -64,6 +64,8 @@
     background: black;
     color: white;
     border-left: 2px solid white;
+    height: 100vh;
+    overflow-x: scroll;
 }
 
 .meet-left-bottom{

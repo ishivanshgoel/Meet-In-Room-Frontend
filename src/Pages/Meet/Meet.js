@@ -48,7 +48,7 @@ function Meet() {
 
 
 
-    // ################## create team model ##################
+    // ################## create-team model ##################
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -66,7 +66,8 @@ function Meet() {
 
         const response = await post('createroom', {
             myId: user,
-            name: teamName
+            name: teamName,
+            owner: user
         })
         console.log(response)
         if (response.data) {
@@ -80,7 +81,7 @@ function Meet() {
             Notification('Error', 'Cannot create this team', 'warning')
         }
     }
-    // ################## create team model ends ##################
+    // ################## create-team model ends ##################
 
     return (
         // <Paper className={classes.paper}>

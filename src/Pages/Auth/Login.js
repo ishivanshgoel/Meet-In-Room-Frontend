@@ -3,6 +3,17 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from 'react-redux'
 import { SETUSER } from '../../Reducers/actionTypes'
+import { makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import { TextField } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import MeetingRoom from '@material-ui/icons/MeetingRoom'
+import LockOpen from '@material-ui/icons/LockOpen'
+import GitHubIcon from '@material-ui/icons/GitHub';
+import LinkedIn from '@material-ui/icons/LinkedIn'
 
 // pages
 import Register from './Register'
@@ -11,9 +22,10 @@ import NotFound from '../Static/NotFound'
 // compoenents
 import Notification from '../../Components/Notification/Notification'
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
+import Illustration from '../Static/Illustration'
 
 // styling
-import { Button, Form, Card } from 'react-bootstrap'
+import { Form, Card } from 'react-bootstrap'
 import './CSS/common.css'
 
 // services
@@ -84,20 +96,20 @@ function _Login() {
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-12 commontext">
+                        <Illustration />
                     </div>
                     <div class="col-md-6 col-12 input-position text-center">
                         <Form onSubmit={handleFormSubmit} id="commonform">
-                            <h2 style={{ textAlign: "center" }}>Login</h2>
+                            <h2 style={{ textAlign: "center" }}><LockOpen /> Login</h2>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Control type="email" placeholder="Enter email"
+                                <TextField label="Email" type="email" fullWidth color="primary"
                                     onChange={(event) => setEmail(event.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
-
-                                <Form.Control type="password" placeholder="Password"
+                                <TextField label="Password" type="password" fullWidth color="primary"
                                     onChange={(event) => setPassword(event.target.value)} />
                             </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button variant="contained" color="primary" type="submit">
                                 Login
                             </Button>
                             <Button variant="link" onClick={moveToRegister}>New User? Register Here</Button>
@@ -109,16 +121,53 @@ function _Login() {
     )
 }
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+    },
+}));
+
 function Login() {
+
+    const classes = useStyles();
+
     return (
-        <Router>
-            <Switch>
-                <Route exact path="/"><_Login /></Route>
-                <Route exact path="/register"><Register /></Route>
-                {/* Not found */}
-                <Route component={NotFound} />
-            </Switch>
-        </Router>
+        <div className={classes.root}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MeetingRoom />
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        Meeting Rooms
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Router>
+                <Switch>
+                    <Route exact path="/"><_Login /></Route>
+                    <Route exact path="/register"><Register /></Route>
+                    {/* Not found */}
+                    <Route component={NotFound} />
+                </Switch>
+            </Router>
+            <div className="footer-common">
+                <div className="footer-common-heading">
+                    <p>Buit with ❤️ by Shivansh Goel</p>
+                </div>
+                <div className="footer-common-icons">
+                    <div className="footer-common-icons-item"><a target="_blank" href="https://github.com/ishivanshgoel"><GitHubIcon/></a></div>
+                    <div className="footer-common-icons-item"><a target="_blank" href="https://www.linkedin.com/in/shivansh-goel-260019a7/"><LinkedIn/></a></div>
+                </div>
+            </div>
+        </div>
+
     )
 }
 

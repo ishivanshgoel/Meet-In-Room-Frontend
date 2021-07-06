@@ -2,3 +2,26 @@
     margin: 50px;
     margin-top: 90px;
 }
+
+.footer-common{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.footer-common-heading{
+    text-align: center;
+}
+
+.footer-common-icons{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+}
+
+.footer-common-icons-item{
+    margin: 10px;
+}

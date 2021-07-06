@@ -44,8 +44,6 @@ function Content() {
 
   const user = useSelector(state => state.user)
 
-  const classes = useStyles();
-
   useEffect(() => {
     // initialize peer connection
     initPeer(user)
@@ -54,11 +52,7 @@ function Content() {
   return (
     <Router>
       <Tab routes={routes} />
-      {/* <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}> */}
             <Switch>
-              {/* <Route exact path="/" component={Welcome} /> */}
               {
                 routes.map((route) => {
                   return (<Route
@@ -74,9 +68,6 @@ function Content() {
               <Route exact path="/team/:id/chat" component={RoomChat} />
               <Route component={NotFound} />
             </Switch>
-          {/* </Grid>
-        </Grid>
-      </div> */}
     </Router>
   )
 }

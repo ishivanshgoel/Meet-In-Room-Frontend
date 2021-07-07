@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 import { initPeer } from '../../Configuration/peer'
-import { makeStyles } from '@material-ui/core/styles'
 
 // Pages
 import AssignedWork from '../AssignedWork/AssignedWork'
@@ -10,7 +9,7 @@ import MyWork from '../MyWork/MyWork'
 import Meet from '../Meet/Meet'
 import JoinRoom from '../Meet/JoinRoom'
 import RoomChat from '../Meet/RoomChat'
-import JoinMeet2 from '../Meet/JoinMeet2'
+import JoinMeet from '../Meet/JoinMeet'
 import AddPeople from '../Meet/AddPeople'
 import NotFound from '../Static/NotFound'
 
@@ -24,21 +23,11 @@ import Tab from './Tab'
 
 // routes
 const routes = [
-  { path: '', component: MyWork, name: 'My Work'},
-  { path: 'assign', component: AssignedWork, name: 'Assign Work' },
-  { path: 'team', component: Meet, name: 'Teams' },
+  { path: '', component: MyWork, name: 'My Work', icon: 'Work'},
+  { path: 'assign', component: AssignedWork, name: 'Assign Work', icon: 'Assignment' },
+  { path: 'team', component: Meet, name: 'Teams', icon: 'Group' },
 ]
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
 
 function Content() {
 
@@ -63,7 +52,7 @@ function Content() {
                 })
               }
               <Route exact path="/team/:id" component={JoinRoom} />
-              <Route exact path="/team/:id/meet" component={JoinMeet2} />
+              <Route exact path="/team/:id/meet" component={JoinMeet} />
               <Route exact path="/team/:id/add" component={AddPeople} />
               <Route exact path="/team/:id/chat" component={RoomChat} />
               <Route component={NotFound} />

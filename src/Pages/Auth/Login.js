@@ -145,7 +145,7 @@ function Login() {
                         <MeetingRoom />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        Meeting Rooms
+                        Meet - In - Room
                     </Typography>
                 </Toolbar>
             </AppBar>

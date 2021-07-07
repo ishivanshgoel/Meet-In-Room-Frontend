@@ -1,46 +1,66 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import Icon from '@material-ui/core/Icon'
+import IconButton from '@material-ui/core/IconButton'
+import Home from '@material-ui/icons/Home'
+
+// icons
+import Work from '@material-ui/icons/Work'
+import Assignment from '@material-ui/icons/Assessment'
+import Group from '@material-ui/icons/Group'
+
+// components
 import Menu from './Menu'
 
 import { useHistory } from 'react-router'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
-        flexGrow: 1,
+      flexGrow: 1,
     },
-});
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }));
 
 export default function CenteredTabs({ routes }) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     const history = useHistory()
 
     return (
-        <Paper className={classes.root}>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered
-            >
+        <AppBar position="static">
+            <Toolbar>
+                <IconButton edge="start" 
+                    className={classes.menuButton} 
+                    color="inherit" 
+                    aria-label="menu">
+                    <Home />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    Meet - In - Room
+                </Typography>
                 {
                     routes.map((route) => {
                         return (
-                            <Tab label={route.name} onClick={()=>{history.push(`/${route.path}`)}}/>
+                            <Button color="inherit" 
+                                onClick={() => { history.push(`/${route.path}`) }}  
+                            >
+                                    <Icon> {route.icon ? route.icon : '#'} </Icon> &nbsp; {route.name}
+                            </Button>
                         )
                     })
                 }
-                <Menu />
-            </Tabs>
-        </Paper>
+                <Menu/>
+            </Toolbar>
+        </AppBar>
     );
 }
+

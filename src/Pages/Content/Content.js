@@ -12,6 +12,7 @@ import RoomChat from '../Meet/RoomChat'
 import JoinMeet from '../Meet/JoinMeet'
 import AddPeople from '../Meet/AddPeople'
 import NotFound from '../Static/NotFound'
+import Homepage from '../Static/Homepage'
 
 // components
 import Tab from './Tab'
@@ -23,7 +24,7 @@ import Tab from './Tab'
 
 // routes
 const routes = [
-  { path: '', component: MyWork, name: 'My Work', icon: 'Work'},
+  { path: 'work', component: MyWork, name: 'My Work', icon: 'Work'},
   { path: 'assign', component: AssignedWork, name: 'Assign Work', icon: 'Assignment' },
   { path: 'team', component: Meet, name: 'Teams', icon: 'Group' },
 ]
@@ -51,6 +52,7 @@ function Content() {
                   />)
                 })
               }
+              <Route exact path="/" component={Homepage} />
               <Route exact path="/team/:id" component={JoinRoom} />
               <Route exact path="/team/:id/meet" component={JoinMeet} />
               <Route exact path="/team/:id/add" component={AddPeople} />

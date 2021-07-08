@@ -60,6 +60,7 @@ function _Login() {
 
         if (!email || !password) {
             Notification('Warning', 'Please type something to proceed!!', "danger")
+            hideLoadingScreen()
             return
         }
 
@@ -83,11 +84,9 @@ function _Login() {
             setItem('uid', uid)
         } else {
             // response is error message : string
-            Notification('Error', response, 'danger')
+            Notification('Error', 'Invalid Username/ Password', 'danger')
         }
-
         hideLoadingScreen()
-
     }
 
     return (

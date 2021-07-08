@@ -9,7 +9,7 @@ import {
     SETMESSAGE,
     SETMESSAGES
 } from '../../Reducers/actionTypes'
-import RecordRTC, { invokeSaveAsDialog, CanvasRecorder } from 'recordrtc'
+import RecordRTC, { invokeSaveAsDialog } from 'recordrtc'
 import Button from '@material-ui/core/Button'
 import Mic from '@material-ui/icons/Mic'
 import MicOff from '@material-ui/icons/MicOff'
@@ -17,13 +17,11 @@ import CallEnd from '@material-ui/icons/CallEnd'
 import Videocam from '@material-ui/icons/Videocam'
 import VideocamOff from '@material-ui/icons/VideocamOff'
 import Message from '@material-ui/icons/Message'
-import Settings from '@material-ui/icons/Settings'
 import People from '@material-ui/icons/People'
 import Send from '@material-ui/icons/Send'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import FiberSmartRecordIcon from '@material-ui/icons/FiberSmartRecord'
 import Avatar from 'react-avatar'
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import './CSS/meet2.css'
 import './JS/joinmeet.js'
@@ -33,6 +31,7 @@ import post from '../../Helpers/Request/post'
 
 // components
 import Notification from '../../Components/Notification/Notification'
+import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
 
 let myStreamGlobal // global stream of user
@@ -44,19 +43,17 @@ function JoinMeet() {
     const user = useSelector((state) => state.user)
     const email = useSelector((state) => state.email)
     const messages = useSelector((state) => state.messages)
+    const [loadingScreen, setLoadingScreen, hideLoadingScreen] = LoadingScreen()
     const meetingParticipants = useSelector((state) => state.meetingParticipants)
     const dispatch = useDispatch()
-    const handle = useFullScreenHandle();
 
     // mic and video status
     const [micStatus, setMicStatus] = useState(true)
     const [videoStatus, setVideoStatus] = useState(true)
-    const [screenShare, setScreenShare] = useState(false)
     const [meetRecord, setMeetRecord] = useState(false)
 
     const [sideComponent, setSideComponent] = useState('participants')
     const myVideo = useRef() // reference to local video
-    const recorderRef = useRef(null) // video recording
     const { id } = useParams(); // meeting room id
 
 
@@ -80,14 +77,10 @@ function JoinMeet() {
 
     useEffect(async () => {
 
-        handle.enter()
-
-        // // join the meeting room
-        // socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
+        setLoadingScreen()
 
         // event fired when any of the user in the room gets disconnected
         socket.on('user-disconnected', ({ userId, userEmail }) => {
-            console.log("")
             connectedUsers[userId] && less(userId)
             connectedUsers[userId] = false
             dispatch({
@@ -104,12 +97,10 @@ function JoinMeet() {
                 type: SETMESSAGE,
                 newMessage: newMessage
             })
-            console.log("Messages after receiving ", messages)
         })
 
         // when someone connects to our room
         socket.on('new-user-connect', ({ userId, userEmail }) => {
-            console.log('New User Connected to Our Room ', userEmail)
             if (!connectedUsers[userId]) {
                 connectPeers(userId, userEmail)
             }
@@ -117,7 +108,6 @@ function JoinMeet() {
 
         // get stream
         myStreamGlobal = await openStream()
-        console.log("My Global Stream after useEffect ", myStreamGlobal)
 
         // add yourself in participants list
         dispatch({
@@ -125,12 +115,8 @@ function JoinMeet() {
             newParticipant: email
         })
 
-        console.log("After Add yourself ", meetingParticipants)
-
         // set to local element
         myVideo.current.srcObject = myStreamGlobal
-        console.log("My Global Stream after setting local video ", myStreamGlobal)
-
 
         // listen for incoming calls
         peer.on('call', call => {
@@ -172,6 +158,7 @@ function JoinMeet() {
             Notification('Error', 'Cannot fetch chat', 'warning')
         }
 
+        hideLoadingScreen()
 
     }, [])
 
@@ -229,9 +216,7 @@ function JoinMeet() {
             } else {
                 Notification('Error', 'Cannot send message', 'warning')
             }
-
         }
-        handle.enter()
     }
 
     const handleMute = () => {
@@ -301,6 +286,7 @@ function JoinMeet() {
 
     return (
         <>
+            {loadingScreen}
             <div className="row" style={{ backgroundColor: "black" }}>
                 <div className="col-10">
                     <div className="controls-left">

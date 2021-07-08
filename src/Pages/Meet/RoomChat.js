@@ -13,6 +13,7 @@ import { SETMESSAGE, SETMESSAGES } from '../../Reducers/actionTypes'
 import './CSS/roomchat.css'
 
 // components
+import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 import ChatCard from '../../Components/ChatCard/ChatCard'
 import Notification from '../../Components/Notification/Notification'
 
@@ -54,11 +55,11 @@ function RoomChat() {
 
     const user = useSelector((state) => state.user)
     const email = useSelector((state) => state.email)
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
 
     const [newMessage, setNewMessage] = useState(null)
 
     // all messages
-    // const [messages, setMessages] = useState([])
     const messages = useSelector((state) => state.messages)
 
     const history = useHistory()
@@ -71,7 +72,7 @@ function RoomChat() {
 
     let count = 0;
     useEffect(async () => {
-
+        showLoadingScreen()
         // join the meeting room
         socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
 
@@ -113,13 +114,14 @@ function RoomChat() {
                 newMessage: { from, message }
             })
         })
-
+        hideLoadingScreen()
     }, [])
 
     const handleSubmit = async (event) => {
 
         // in post request send room id 
         // and chat to state variable
+        showLoadingScreen()
         const response = await post('sendMessage', {
             roomId: id,
             from: email,
@@ -137,6 +139,7 @@ function RoomChat() {
         } else {
             Notification('Error', 'Cannot send message', 'warning')
         }
+        hideLoadingScreen()
     }
 
     // send message on keyPress => Enter
@@ -156,6 +159,7 @@ function RoomChat() {
 
     return (
         <div className={classes.root}>
+            {loadingScreen}
             <div className="room-join-meet">
                 <Button variant="contained" color="primary" onClick={handleMeetJoin}><Call /><span style={{ margin: "10px" }}>Join Meet</span></Button>
             </div>

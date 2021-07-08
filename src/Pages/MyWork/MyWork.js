@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
 import Card from '../../Components/WorkCard/WorkCard'
 
 // helpers
@@ -10,27 +9,17 @@ import post from '../../Helpers/Request/post'
 // components
 import Notification from '../../Components/Notification/Notification'
 import Illustration from '../Static/Illustration'
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-
-}));
-
+import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
 function MyWork() {
     const user = useSelector((state) => state.user)
     const email = useSelector((state) => state.email)
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
 
     const [fetched, setFetched] = useState(false)
     const [myTasks, setMyTasks] = useState([])
     useEffect(async () => {
+        showLoadingScreen()
         const response = await post('mywork', {
             myEmail: email
         })
@@ -40,10 +29,12 @@ function MyWork() {
         } else {
             Notification('Error', 'Cannot fetch your tasks', 'danger')
         }
+        hideLoadingScreen()
     }, [])
 
     return (
         <>
+            {loadingScreen}
             {
                 fetched ? (
                     <Grid

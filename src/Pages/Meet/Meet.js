@@ -1,49 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
 import TeamCards from './TeamCards'
 import { Modal, Form } from 'react-bootstrap'
 import Button from '@material-ui/core/Button'
 import Create from '@material-ui/icons/Create'
 
 // compoents
+import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 import Notification from '../../Components/Notification/Notification'
 import Illustration from '../Static/Illustration'
 
 // helpers
 import post from '../../Helpers/Request/post'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-
-}));
-
-
 function Meet() {
 
 
-    const classes = useStyles();
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
 
     const user = useSelector((state) => state.user)
-    const history = useHistory()
     const [rooms, setRooms] = useState([])
 
     useEffect(async () => {
-
+        showLoadingScreen()
         const myRooms = await post('myrooms', {
             myId: user
         })
         console.log(myRooms.data)
         setRooms(myRooms.data)
-
+        hideLoadingScreen()
     }, [])
 
 
@@ -84,8 +69,8 @@ function Meet() {
     // ################## create-team model ends ##################
 
     return (
-        // <Paper className={classes.paper}>
         <div>
+            {loadingScreen}
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px', marginRight: '20px' }}>
                 <Button variant="contained" color="primary" onClick={handleShow}>
                     <Create /> <span style={{ margin: '10px' }}>New Team</span>

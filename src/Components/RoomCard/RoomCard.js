@@ -66,7 +66,7 @@ function RoomCard({ name, roomId, type }) {
                 </CardContent>
                 <div className={classes.controls}>
                     <Button variant="contained" color="primary" className={classes.buttonB} onClick={()=>handleJoinRoom(roomId)}>
-                        <VideoCall /><span style={{ margin: "2px" }}>Meet</span>
+                        <VideoCall /><span style={{ margin: "2px" }}>Open</span>
                     </Button>
                     {
                         type == 'owner' ? (

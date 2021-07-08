@@ -121,6 +121,7 @@ function ResponsiveDrawer(props) {
 
     return (
         <>
+            {loadingScreen}
             {
                 users ? (
                     <div className={classes.root}>

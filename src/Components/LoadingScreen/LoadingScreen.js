@@ -1,13 +1,29 @@
 import React from 'react'
-import { Loader, Segment, Dimmer } from 'semantic-ui-react'
+import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Backdrop from '@material-ui/core/Backdrop'
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      '& > * + *': {
+        marginLeft: theme.spacing(2),
+      },
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+      },
+  }));
 
 function LoadingScreen() {
+    
+    const classes = useStyles()
+
     return (
-        <Segment style={{height: "100vh", width: "100%" }}>
-            <Dimmer active>
-                <Loader content='Loading' />
-            </Dimmer>
-        </Segment>
+        <Backdrop className={classes.backdrop} open={true}>
+            <CircularProgress />
+        </Backdrop>
     )
 }
 

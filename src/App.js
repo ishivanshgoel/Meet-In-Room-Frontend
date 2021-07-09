@@ -11,7 +11,10 @@ import 'semantic-ui-css/semantic.min.css'
 import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 
+// helpers
 import { getItem } from './Helpers/LocalStorage/LocalStorage'
+
+// action types
 import { SETUSER } from './Reducers/actionTypes'
 
 function App() {

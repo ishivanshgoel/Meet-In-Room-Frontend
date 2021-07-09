@@ -1,8 +1,5 @@
 import { SETUSER, 
         REMOVEUSER, 
-        CALLACCEPTED, 
-        SETPEER, 
-        SETSTREAM, 
         MEETINGPARTICIPANTS,
         REMOVEPARTICIPANT,
         SETMESSAGE, 
@@ -34,29 +31,6 @@ function userReducers(state = initialState, action) {
                 ...state,
                 email: false,
                 user: false,
-            }
-        case CALLACCEPTED:
-            return {
-                ...state,
-                callaccepted: true
-            }
-        
-        case SETPEER:
-            return {
-                ...state,
-                peerId: action.peerId
-            }
-        
-        case SETSTREAM:
-            return {
-                ... state,
-                stream: action.stream
-            }
-
-        case SETSTREAM:
-            return {
-                ... state,
-                stream: action.stream
             }
         
         case MEETINGPARTICIPANTS:

@@ -11,13 +11,18 @@ import Notification from '../../Components/Notification/Notification'
 import Illustration from '../Static/Illustration'
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
+/**
+ * @package fetches and displays tasks of user
+ * @param {object} myTasks Array of the tasks assigned to the user
+ */
+
 function MyWork() {
-    const user = useSelector((state) => state.user)
-    const email = useSelector((state) => state.email)
-    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
+    const user = useSelector((state) => state.user) // userId from REDUX store
+    const email = useSelector((state) => state.email) // userEmail from REDUX store
+    const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen() // loading screen
 
     const [fetched, setFetched] = useState(false)
-    const [myTasks, setMyTasks] = useState([])
+    const [myTasks, setMyTasks] = useState([]) // all the fetched taks
     useEffect(async () => {
         showLoadingScreen()
         const response = await post('mywork', {

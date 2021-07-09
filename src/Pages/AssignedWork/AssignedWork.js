@@ -22,6 +22,12 @@ import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 import Notification from '../../Components/Notification/Notification'
 import AssignedWorkRight from './AssignedWorkRight.js'
 
+/**
+ * @package To assign work to the users
+ * @param {Object} users Contact List (list of all the users) 
+ * @param {AssignedWorkRight} Right side of this component (for assigning work)
+ */
+
 const drawerWidth = 280;
 
 const useStyles = makeStyles((theme) => ({

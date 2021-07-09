@@ -60,7 +60,7 @@ function Register() {
 
         } else {
             // response is error message : string
-            Notification('Error', response, 'danger')
+            Notification('Error', 'User already exists/ Internal Server Error', 'danger')
         }
 
         hideLoadingScreen()

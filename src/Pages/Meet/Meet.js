@@ -14,8 +14,7 @@ import Illustration from '../Static/Illustration'
 import post from '../../Helpers/Request/post'
 
 function Meet() {
-
-
+    
     const [loadingScreen, showLoadingScreen, hideLoadingScreen] = LoadingScreen()
 
     const user = useSelector((state) => state.user)

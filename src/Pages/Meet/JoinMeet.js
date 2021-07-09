@@ -33,6 +33,17 @@ import post from '../../Helpers/Request/post'
 import Notification from '../../Components/Notification/Notification'
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
+/**
+ * @param {object} myStreamGlobal local stream of user
+ * @param {object} connectedUsers map of connected users
+ * @param {object} record screen stream capture from meet recording
+ * @param {function} connectPeers calls peers
+ * @param {function} handleSendMessage send message to all the peers in team
+ * @param {function} handleMute mute audio of current user
+ * @param {function} handleVideo turn off video of current user
+ * @param {function} handleLeaveMeet to leave the meeting
+ * @param {function} handleRecord record the meeting
+ */
 
 let myStreamGlobal // global stream of user
 let connectedUsers = {} // map of connected peers
@@ -239,16 +250,6 @@ function JoinMeet() {
         window.location.href = "/team"
     }
 
-    async function captureScreen() {
-        let captureStream = await navigator.mediaDevices.getDisplayMedia({
-            video: {
-                cursor: "always"
-            },
-            audio: false
-        });
-        return captureStream
-    }
-
     //////////////// Meet-Recording Handler ////////////////
     const handleRecord = async () => {
         if (!meetRecord) {
@@ -304,11 +305,6 @@ function JoinMeet() {
                                 }
                             </Button>
                         </div>
-                        {/* <div style={{ margin: "2px" }}>
-                            <Button variant="contained" color="primary" onClick={() => setSideComponent("controls")}>
-                                <Settings />
-                            </Button>
-                        </div> */}
                         <div style={{ margin: "2px" }}>
                             <Button variant="contained" color="primary" onClick={handleRecord}>
                                 { meetRecord ? <FiberSmartRecordIcon/> : <FiberManualRecordIcon/> }

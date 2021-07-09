@@ -20,6 +20,13 @@ import Notification from '../../Components/Notification/Notification'
 // Helpers
 import post from '../../Helpers/Request/post'
 
+/**
+ * @package realtime team chatting and joining video meeting
+ * @param {function} handleSubmit sends message from input box in team
+ * @param {function} handleSendMessage listens for Enter keyPress event on input box
+ * @param {function} handleMeetJoin redirects to video meeting waiting rooms
+ */
+
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+/**
+ * @package Displays all the teams
+ */
+
 export default function TeamCards({rooms}) {
   const classes = useStyles();
   return (

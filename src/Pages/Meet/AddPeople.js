@@ -25,6 +25,10 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ * @package add people in team with teamId = id (from url parameter)
+ */
+
 export default function BasicTable() {
   const classes = useStyles();
 

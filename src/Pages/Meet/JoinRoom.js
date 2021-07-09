@@ -15,7 +15,11 @@ import CallEnd from '@material-ui/icons/CallEnd'
 // components
 import LoadingScreen from '../../Components/LoadingScreen/LoadingScreenHook'
 
-import { getAllInputAudio, getAllOutputAudio, getAllCameras } from './getConnectedDevices'
+/**
+ * @package waiting room before joing video meeting.
+ * @param {function} handleMeetJoin Join the meeting.
+ * @param {function} handleMoveBack Move back, incase don't want to join the meeting.
+ */
 
 const useStyles = makeStyles((theme) => ({
     root: {

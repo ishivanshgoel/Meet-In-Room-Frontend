@@ -10,7 +10,7 @@ import Peer from 'peerjs'
 let peer
 function initPeer(id){
     peer = new Peer(id, {
-        // debug: 3
+        debug: 3
     })
 }
 

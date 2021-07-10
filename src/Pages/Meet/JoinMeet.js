@@ -90,6 +90,9 @@ function JoinMeet() {
 
         setLoadingScreen()
 
+        connectedUsers[user] = true
+        socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
+
         // event fired when any of the user in the room gets disconnected
         socket.on('user-disconnected', ({ userId, userEmail }) => {
             connectedUsers[userId] && less(userId)

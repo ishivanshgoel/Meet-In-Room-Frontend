@@ -83,16 +83,16 @@ function RoomChat() {
         // join the meeting room
         socket.emit('join-room', { roomId: id, userId: user, userEmail: email })
 
-        socket.on('new-room-message', ({ from, message }) => {
-            let gotMessage = { from, message }
-            count+=1
-            alert(count)
-            dispatch({
-                type: SETMESSAGE,
-                newMessage: gotMessage
-            })
+        // socket.on('new-room-message', ({ from, message }) => {
+        //     let gotMessage = { from, message }
+        //     count+=1
+        //     alert(count)
+        //     dispatch({
+        //         type: SETMESSAGE,
+        //         newMessage: gotMessage
+        //     })
 
-        })
+        // })
 
 
         // 1. fetch all the previous chats

@@ -45,7 +45,11 @@ To simulate it's working, let's assume that User 1, User 2 and User 3 are alread
 
 ![full system design](https://github.com/ishivanshgoel/Meet-In-Room-Frontend/blob/master/docs/URL%20Mapper.png)
 
+### - Folder Structure.
+---
+#### HLD
 ![full system design](https://github.com/ishivanshgoel/Meet-In-Room-Frontend/blob/master/docs/HLD%20Application%20Structure.png)
+#### LLD
 ![full system design](https://github.com/ishivanshgoel/Meet-In-Room-Frontend/blob/master/docs/LLD%20Application%20Structure.png)
 
 ## Demo

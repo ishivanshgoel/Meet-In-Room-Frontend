@@ -53,6 +53,8 @@ To simulate it's working, let's assume that User 1, User 2 and User 3 are alread
 ![full system design](https://github.com/ishivanshgoel/Meet-In-Room-Frontend/blob/master/docs/LLD%20Application%20Structure.png)
 
 ## Demo
+- [Click here to view Video Demo](https://drive.google.com/file/d/1sQOccGuxLi1WEZ4o_0aGdKwnzUgMKCQd/view?usp=sharing)
+- [Click here to view PPT](https://docs.google.com/presentation/d/1yqANeB6di1Xq7yy6h-aVU1RS15hPWlC7_jKBZ1YS8fs/edit?usp=sharing)
 
 ## License
 MIT License

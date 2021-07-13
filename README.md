@@ -24,6 +24,11 @@ The features are focused to setup a hassle free workflow in an organisation. The
 
 ## Supporting Documents
 
+### Flow of Application
+---
+![flow of application](https://github.com/ishivanshgoel/Meet-In-Room-Frontend/blob/master/docs/flow%20of%20application.png)
+- [Check out  this Video for More information](https://drive.google.com/file/d/1sQOccGuxLi1WEZ4o_0aGdKwnzUgMKCQd/view?usp=sharing)
+
 ### - High Level System Desgin of the Application
 ---
 

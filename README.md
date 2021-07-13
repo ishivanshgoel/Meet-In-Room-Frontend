@@ -22,6 +22,14 @@ The features are focused to setup a hassle free workflow in an organisation. The
 -  WebRTC
 -  PeerJS
 
+## Frontend
+- [Meet-In-Room-Frontend](https://github.com/ishivanshgoel/Meet-In-Room-Frontend.git)
+- [Hosted on Firebase](https://teams-fecd7.web.app/)
+
+## Backend
+- [Meet-In-Room-Backend](https://github.com/ishivanshgoel/Meet-In-Room-Backend.git)
+- [Hosted on Microsoft Azure](https://meetinroom.azurewebsites.net/)
+
 ## Supporting Documents
 
 ### Flow of Application

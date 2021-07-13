@@ -59,7 +59,7 @@ function JoinMeet() {
     const dispatch = useDispatch()
 
     // mic and video status
-    const [micStatus, setMicStatus] = useState(true)
+    const [micStatus, setMicStatus] = useState(false)
     const [videoStatus, setVideoStatus] = useState(true)
     const [meetRecord, setMeetRecord] = useState(false)
 
@@ -74,7 +74,7 @@ function JoinMeet() {
             // 'audio': {
             //     'echoCancellation': true,
             // },
-            'audio': true,
+            'audio': false,
             'video': true
         }
         return constraints
@@ -115,9 +115,7 @@ function JoinMeet() {
 
         // when someone connects to our room
         socket.on('new-user-connect', ({ userId, userEmail }) => {
-            if (!connectedUsers[userId]) {
                 connectPeers(userId, userEmail)
-            }
         })
 
         // get stream
